@@ -47,8 +47,15 @@ exports.UserModule = function(db)
     this.LogIn = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
         try 
-        { 
-            db.Node.findOne( { email: req.body.email }, function(err, dave) {                
+        {
+            //db.Node.findOne( { email: req.body.email }, function(err, dave) { 
+            var users = [];
+            db.Graph
+            .start()
+            .match('(n:User)')
+            .where({ 'n.email': req.body.email })
+	        .return('(n)')
+	        .limit(1, function(err, dave){            
             if (err)
             {
                 console.error('Error with user login: ' + err);
@@ -106,7 +113,7 @@ exports.UserModule = function(db)
      * GET userlist page.
      */		  
     this.GetUserslist = function(req, res) {
-  
+ 
 	    var users = [];
 	
         db.Graph
