@@ -1,8 +1,8 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngTagsInput'])
 
 	.controller('LoginCtrl', function ($scope, $state, UserService) {
 	  
-	  $scope.signIn = function(user) {
+	    $scope.login = function (user) {
 	      console.log('Log In', user);
 
 	      UserService.login(user);
@@ -11,7 +11,7 @@ angular.module('starter.controllers', [])
 	  
 	})
 	
-	.controller('SignupCtrl', function ($scope, $state,UserService) {
+	.controller('SignupCtrl', function ($scope, $state, UserService) {
 	  
 	  $scope.continueSignUp = function(user) {
 		console.log('Sign up - phase 1', user);
@@ -21,45 +21,41 @@ angular.module('starter.controllers', [])
 	  
 	  $scope.signUp = function(user) {
 	      console.log('Sign up - phase 2', user);
-	      UserService.fillTags({ university: user.university, courses: user.courses });
+	      UserService.fillTags(user.university, user.courses);
 	      UserService.register();
 		  
 	  };
 	  
 	})
 
-	.controller('HomeTabCtrl', function($scope) {
-	  console.log('HomeTabCtrl');
+	.controller('HomeTabCtrl', function($scope,$state) {
+	    console.log('HomeTabCtrl');
+	    $scope.askquestion = function () {
+	        $state.go('askquestion');
+	    }
 	})
 	
-	.controller('CameraCtrl', function ($scope) {        
+	.controller('AskQuestionCtrl', function ($scope) {        
 		 $scope.takePic = function() {
 			var options =   {
 				quality: 50,
-				destinationType: Camera.DestinationType.FILE_URI,
+				//destinationType: Camera.DestinationType.FILE_URI,
 				sourceType: 1,      // 0:Photo Library, 1=Camera, 2=Saved Photo Album
 				encodingType: 0     // 0=JPG 1=PNG
 			}
 			navigator.camera.getPicture(onSuccess,onFail,options);
 		}
-		var onSuccess = function(FILE_URI) {
-			console.log(FILE_URI);
-			$scope.picData = FILE_URI;
+		 var onSuccess = function (imageData) {
+			$scope.picData = "data:image/jpeg;base64," + imageData;
 			$scope.$apply();
 		};
 		var onFail = function(e) {
 			console.log("On fail " + e);
 		}
-		$scope.send = function() {   
-			var myImg = $scope.picData;
-			var options = new FileUploadOptions();
-			options.fileKey="post";
-			options.chunkedMode = false;
-			var params = {};
-			params.user_token = localStorage.getItem('auth_token');
-			params.user_email = localStorage.getItem('email');
-			options.params = params;
-			var ft = new FileTransfer();
-			ft.upload(myImg, encodeURI("https://example.com/posts/"), onUploadSuccess, onUploadFail, options);
-		}
-		});
+
+		$scope.tags = [];
+
+		$scope.loadTags = function () {
+		    return $http.get('tags.json');
+		};
+	});

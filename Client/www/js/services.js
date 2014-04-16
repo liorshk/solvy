@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-    .factory('UserService', function ($http) {
+    .factory('UserService', function ($http,$rootScope, $state) {
 
         var user = {};
 
@@ -10,25 +10,28 @@ angular.module('starter.services', [])
                 user.password = password;
                 user.email = email;
             },
-            fillTags: function (tags) {
-                user.tags = tags
+            fillTags: function (university,courses) {
+                user.university = university;
+                user.courses = courses;
             },
 
             register: function () {
+
                 $http({
                     url: 'http://localhost/AddUser',
                     method: "POST",
-                    data: user,
+                    data: "data=" +JSON.stringify(user),
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 })
-                .success(function (response) {
-                    
+                .success(function (data, status, headers, config) {
+                    var parsedData = angular.fromJson(data);
                     // success
-                    if (response) {
-                        $state.go('login');
+                    if (parsedData.IsSuccess) {
+                        user.id = parsedData.UserID;
+                        $state.go('tabs.home');
                     }
                 })
-                .error(function (response) { // optional
+                .error(function (data, status, headers, config) { // optional
                         // failed
                         $scope.errormessage = 'Error';
                     }
@@ -37,19 +40,24 @@ angular.module('starter.services', [])
 
             login: function(user)
             {
-                    $http
-                    .post('http://localhost/login', user)
-                    .success(function (data, status, headers, config) {
-                        //$window.sessionStorage.token = data.token;
-                        $state.go('tabs.home');
-                    })
-                    .error(function (data, status, headers, config) {
-                        // Erase the token if the user fails to log in
-                        //delete $window.sessionStorage.token;
+                $http({
+                    url: 'http://localhost/LogIn',
+                    method: "POST",
+                    data: "data=" + JSON.stringify(user),
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                })
+                .success(function (data, status, headers, config) {
 
-                        // Handle login errors here
-                        $scope.errormessage = 'Error: Invalid user or password';
-                    });
+                    // success
+                    if (angular.fromJson(data)) {
+                        $state.go('tabs.home');
+                    }
+                })
+                .error(function (data, status, headers, config) { // optional
+                    // failed
+                    $scope.errormessage = 'Error';
+                }
+                );
             }
         }
     })

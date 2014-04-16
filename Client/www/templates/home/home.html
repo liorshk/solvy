@@ -1,10 +1,29 @@
-<ion-view title="Home">
+﻿<ion-view title="Home">
 <ion-content padding="true">
-  <p>Example of Ionic tabs. Navigate to each tab, and
-  navigate to child views of each tab and notice how
-  each tab has its own navigation history.</p>
-  <p>
-	<a class="button icon icon-right ion-chevron-right" href="#/tab/facts">Scientific Facts</a>
-  </p>
+    <div class="list">
+
+        <a class="item item-icon-right" ng-click="askquestion()">
+            <i class="ion-camera"></i>
+            שאל שאלה
+        </a>
+
+        <a class="item item-icon-right" ng-click="hotquestions">
+            <i class="icon ion-chatbubble-working"></i>
+            שאלות חמות
+
+        </a>
+
+        <a class="item item-icon-right" href="#">
+            <i class="ion-ios7-help-empty"></i>
+            תגידו זה נכון?
+        </a>
+
+        <a class="item item-icon-right" href="#">
+            <i class="icon ion-person-stalker"></i>
+            שאלות ותשובות
+
+        </a>
+
+    </div>
 </ion-content>
 </ion-view>
