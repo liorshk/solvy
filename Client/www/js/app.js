@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic','starter.services','starter.controllers'])
+angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
 	// .run(function($ionicPlatform) {
 	  // $ionicPlatform.ready(function() {
 		// if(window.StatusBar) {
@@ -25,7 +25,7 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  templateUrl: "templates/login/login.html",
 		  controller: 'LoginCtrl'
 		})
-
+        // Signup
 		.state('signup1', {
 		  url: "/signup",
 		  templateUrl: "templates/login/signup.html",
@@ -50,53 +50,20 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  views: {
 			'home-tab': {
 			    templateUrl: "templates/home/home.html",
-			  controller: 'HomeTabCtrl'
+			    controller: 'HomeTabCtrl'
 			}
 		  }
 		})
-		.state('tabs.facts', {
-		  url: "/facts",
-		  views: {
-			'home-tab': {
-			    templateUrl: "templates/home/facts.html"
-			}
-		  }
-		})
-		.state('tabs.facts2', {
-		  url: "/facts2",
-		  views: {
-			'home-tab': {
-			    templateUrl: "templates/home/facts2.html"
-			}
-		  }
-		})
-		.state('tabs.about', {
-		  url: "/about",
-		  views: {
-			'about-tab': {
-			    templateUrl: "templates/home/about.html"
-			}
-		  }
-		})
-		.state('tabs.navstack', {
-		  url: "/navstack",
-		  views: {
-			'about-tab': {
-			    templateUrl: "templates/home/nav-stack.html"
-			}
-		  }
-		})
-		.state('tabs.contact', {
-		  url: "/contact",
-		  views: {
-			'contact-tab': {
-			    templateUrl: "templates/home/contact.html"
-			}
-		  }
-		});
+          // Ask Question
+        .state('askquestion', {
+            url: "/askquestion",
+            templateUrl: "templates/askquestion/askquestion.html",
+            controller: 'AskQuestionCtrl'
+        })
+	    ;
 
 
-	  $urlRouterProvider.otherwise("/signup");
+	  $urlRouterProvider.otherwise("/login");
 
 	});
 
