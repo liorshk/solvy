@@ -8,6 +8,7 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var routes = require('./routes');
 var user = require('./routes/user')
+var question = require('./routes/question')
 var http = require('http');
 var path = require('path');
 var ejs = require('ejs');
@@ -19,6 +20,7 @@ var Neo4jMapper = require('neo4jmapper');
 var neo4j = new Neo4jMapper('http://54.72.160.154:7474/');
 
 user = new user.UserModule(neo4j);
+question = new question.QuestionModule(neo4j);
 
 var app = express();
 
@@ -39,7 +41,7 @@ app.get('/', routes.index);
 // ----------------------------------------Methods To implements.--------------------------------------------
 app.post('/AddUser', user.AddUser); // return ture if success else false
 app.post('/LogIn', user.LogIn); // return ture if success else false
-//app.post('/AskQuestion', user.AskQuestion);
+app.post('/AskQuestion', user.AskQuestion);
 //app.post('/AddAnswerToQuestion', user.userlist);
 //app.get('/GetQuestions', user.userlist);
 //app.get('/GetQuestionWithSolutions', user.userlist);
