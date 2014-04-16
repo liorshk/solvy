@@ -46,7 +46,7 @@ exports.UserModule = function(db)
     */
     this.LogIn = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
-
+        console.log(req.body);
         var data = JSON.parse(req.body.data);
         try 
         { 
