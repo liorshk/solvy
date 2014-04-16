@@ -1,0 +1,52 @@
+<html>
+<head>
+	<title>{{= title}}</title>
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+	<script src='/javascripts/global.js'></script>
+</head>
+<body>
+    <div id="wrapper">
+        
+        <div id="userInfo">        
+            <h2>User Info</h2>    
+            <p>
+                <b>Name:</b><span id='userInfoName'></span>
+                <br />
+                <b>Email:</b><span id='userInfoEmail'></span>
+            </p>
+        </div>
+
+        <h2> User List</h2>
+        <div id="userList">            
+            <table>
+                <thead>
+                    <th>UserName</th>
+                    <th>Email</th>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <input type="button" id="btnDeleteAll" value="Delete All" />
+        </div>
+        <h2>Add User</h2>
+        <div id="addUser">            
+            <fieldset>
+                <input type="text" placeholder='Username' id="inputUserName" />
+                <input type="password" placeholder='Password' id="inputUserPassword" />
+                <input type="email" placeholder='Email' id="inputUserEmail" />
+            </fieldset>
+            <br />
+            <input type="button" id="btnAddUser" value="Add User">
+        </div>
+        <br />
+        <h2>User Login</h2>
+        <div id="userLogin">
+            <fieldset>
+                <input type="email" placeholder='Email' id="inputUserEmail" />
+                <input type="password" placeholder='Password' id="inputUserPassword" />
+            </fieldset>
+            <br />
+            <input type="button" id="btnUserLogin" value="Login">
+        </div>
+</body>
+</html>
