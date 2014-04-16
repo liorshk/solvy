@@ -2,47 +2,45 @@
 exports.UserModule = function(db)
 {
     var User = db.Node.registerModel( 'User', { 
-			fields: {
-			  indexes: {
-				email: true
-			  },
-			  defaults: {
-				created_on: function()  {
-				  return new Date().getTime();
-				}
-			  }
+		fields: {
+			indexes: {
+			email: true
+			},
+			defaults: {
+			created_on: function()  {
+				return new Date().getTime();
 			}
-		  })
+			}
+		}
+		})
 
 
      /*
      * POST to adduser.
      */
     this.AddUser = function(req, res) {		
-		
-		    var data = req.params;
-		    if(req.method == "POST")
-		    {
-			    data = req.body;
-		    }
-		    var user = new User(data);
+		var data = req.params;
+		if(req.method == "POST")
+		{
+			data = req.body;
+		}
+		var user = new User(data);
 
-            try {
-                user.save(function(err, result) {
-                    res.json(true);
-                    });
+        try {
+            user.save(function(err, result) {
+                res.json(true);
+                console.log('Success to add user: ' + err);
+                });
 
-            } catch (err) 
-            {
-                console.log('Failed to add user: ' + err);
-                res.json(false);
-            }
-	    }
-
-
+        } catch (err) 
+        {
+            console.log('Failed to add user: ' + err);
+            res.json(false);
+        }
+	}
         
     /*
-    * POST to adduser.
+    * POST to LogIn.
     */
     this.LogIn = function(req, res) {		
         try 
@@ -78,19 +76,28 @@ exports.UserModule = function(db)
     };
 
 
-		//    var data = req.params;
-		//    if(req.method == "POST")
-		//    {
-		//	    data = req.body;
-		//    }
-		//    var user = new User(data);
+         /*
+     * POST to adduser.
+     */
+    this.AskQuestion = function(req, res) {		
+		var data = req.params;
+		if(req.method == "POST")
+		{
+			data = req.body;
+		}
+		var user = new User(data);
 
-		//    user.save(function(err, result) {
-        //            res.json('');
-        //            });
+        try {
+            user.save(function(err, result) {
+                res.json(true);
+                });
 
-	    //}
-
+        } catch (err) 
+        {
+            console.log('Failed to add user: ' + err);
+            res.json(false);
+        }
+	}
         
     /*
      * GET userlist page.
