@@ -28,14 +28,14 @@ exports.UserModule = function(db)
 
         try {
             user.save(function(err, result) {
-                res.json(true);
-                console.log('Success to add user: ' + err);
+                res.json({IsSuccess:true, UserID:result.id});
+                console.log('Success to add user');
                 });
 
         } catch (err) 
         {
             console.log('Failed to add user: ' + err);
-            res.json(false);
+            res.json({IsSuccess:false, Error:'Failed to register user'});
         }
 	}
         
