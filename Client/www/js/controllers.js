@@ -1,39 +1,29 @@
-angular.module('starter.controllers',[])
+angular.module('starter.controllers', [])
 
-	.controller('LoginCtrl', function($scope, $state) {
+	.controller('LoginCtrl', function ($scope, $state, UserService) {
 	  
 	  $scope.signIn = function(user) {
 	      console.log('Log In', user);
 
-	      $http
-                .post('/authenticate', user)
-                .success(function (data, status, headers, config) {
-                    $window.sessionStorage.token = data.token;
-                    $scope.message = 'Welcome';
-                })
-                .error(function (data, status, headers, config) {
-                    // Erase the token if the user fails to log in
-                    delete $window.sessionStorage.token;
-
-                    // Handle login errors here
-                    $scope.message = 'Error: Invalid user or password';
-                });
-		$state.go('tabs.home');
+	      UserService.login(user);
+		
 	  };
 	  
 	})
 	
-	.controller('SignupCtrl', function($scope, $state) {
+	.controller('SignupCtrl', function ($scope, $state,UserService) {
 	  
 	  $scope.continueSignUp = function(user) {
 		console.log('Sign up - phase 1', user);
-		//User.fillDetails(user.username,user.password,user.email);
+		UserService.fillDetails(user.username, user.password, user.email);
 		$state.go('signup2');
 	  };
 	  
 	  $scope.signUp = function(user) {
-		console.log('Sign up - phase 2', user);
-		$state.go('tabs.home');
+	      console.log('Sign up - phase 2', user);
+	      UserService.fillTags({ university: user.university, courses: user.courses });
+	      UserService.register();
+		  
 	  };
 	  
 	})

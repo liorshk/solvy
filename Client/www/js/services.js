@@ -1,25 +1,58 @@
 angular.module('starter.services', [])
 
-	.factory('UserService', function() {
-	 
-		var user = {};
+    .factory('UserService', function ($http) {
 
-		return {
-			fillDetails: function(username,password,email) {
-				user.username = username;
-				user.password = password;
-				user.email = email;
-			},
-			fillTags: function(tags) {
-				user.tags = tags
-			},
-			
-			register: function()
-			{
-				
-			}
-		}
-	})
+        var user = {};
+
+        return {
+            fillDetails: function (username, password, email) {
+                user.username = username;
+                user.password = password;
+                user.email = email;
+            },
+            fillTags: function (tags) {
+                user.tags = tags
+            },
+
+            register: function () {
+                $http
+                   .post('http://54.72.160.154/AddUser', user)
+                   .success(function (data, status, headers, config) {
+                       if (data)
+                       {
+                           $state.go('login');
+                       }
+                       //$window.sessionStorage.token = data.token;
+                       
+                   })
+                   .error(function (data, status, headers, config) {
+                       // Erase the token if the user fails to log in
+                       //delete $window.sessionStorage.token;
+
+                       // Handle signup errors here
+                       $scope.errormessage = 'Error';
+                   });
+            },
+
+            login: function(user)
+            {
+                    $http
+                    .post('http://54.72.160.154/login', user)
+                    .success(function (data, status, headers, config) {
+                        //$window.sessionStorage.token = data.token;
+                        $state.go('tabs.home');
+                    })
+                    .error(function (data, status, headers, config) {
+                        // Erase the token if the user fails to log in
+                        //delete $window.sessionStorage.token;
+
+                        // Handle login errors here
+                        $scope.errormessage = 'Error: Invalid user or password';
+                    });
+            }
+        }
+    })
+
 	
 	.factory('Tags', function($q) {
 

@@ -18,36 +18,38 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 
 	.config(function($stateProvider, $urlRouterProvider) {
 
+        // Login
 	  $stateProvider
 		.state('login', {
 		  url: "/login",
-		  templateUrl: "templates/login.html",
+		  templateUrl: "templates/login/login.html",
 		  controller: 'LoginCtrl'
 		})
+
 		.state('signup1', {
 		  url: "/signup",
-		  templateUrl: "templates/signup.html",
+		  templateUrl: "templates/login/signup.html",
 		  controller: 'SignupCtrl'
 		})
 		.state('signup2', {
 		  url: "/signup2",
-		  templateUrl: "templates/signupcontinue.html",
+		  templateUrl: "templates/login/signupcontinue.html",
 		  controller: 'SignupCtrl'
 		})
 		.state('forgotpassword', {
 		  url: "/forgotpassword",
-		  templateUrl: "templates/forgotpassword.html"
+		  templateUrl: "templates/login/forgotpassword.html"
 		})
 		.state('tabs', {
 		  url: "/tab",
 		  abstract: true,
-		  templateUrl: "templates/tabs.html"
+		  templateUrl: "templates/home/tabs.html"
 		})
 		.state('tabs.home', {
 		  url: "/home",
 		  views: {
 			'home-tab': {
-			  templateUrl: "templates/home.html",
+			    templateUrl: "templates/home/home.html",
 			  controller: 'HomeTabCtrl'
 			}
 		  }
@@ -56,7 +58,7 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  url: "/facts",
 		  views: {
 			'home-tab': {
-			  templateUrl: "templates/facts.html"
+			    templateUrl: "templates/home/facts.html"
 			}
 		  }
 		})
@@ -64,7 +66,7 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  url: "/facts2",
 		  views: {
 			'home-tab': {
-			  templateUrl: "templates/facts2.html"
+			    templateUrl: "templates/home/facts2.html"
 			}
 		  }
 		})
@@ -72,7 +74,7 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  url: "/about",
 		  views: {
 			'about-tab': {
-			  templateUrl: "templates/about.html"
+			    templateUrl: "templates/home/about.html"
 			}
 		  }
 		})
@@ -80,7 +82,7 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  url: "/navstack",
 		  views: {
 			'about-tab': {
-			  templateUrl: "templates/nav-stack.html"
+			    templateUrl: "templates/home/nav-stack.html"
 			}
 		  }
 		})
@@ -88,13 +90,13 @@ angular.module('starter', ['ionic','starter.services','starter.controllers'])
 		  url: "/contact",
 		  views: {
 			'contact-tab': {
-			  templateUrl: "templates/contact.html"
+			    templateUrl: "templates/home/contact.html"
 			}
 		  }
 		});
 
 
-	   $urlRouterProvider.otherwise("/signup");
+	  $urlRouterProvider.otherwise("/signup");
 
 	});
 
