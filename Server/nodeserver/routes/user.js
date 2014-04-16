@@ -24,7 +24,7 @@ exports.UserModule = function(db)
 		var data = req.params;
 		if(req.method == "POST")
 		{
-			data = req.body;
+		    data = JSON.parse(req.body.data);
 		}
 		var user = new User(data);
 
@@ -46,9 +46,11 @@ exports.UserModule = function(db)
     */
     this.LogIn = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
+
+        var data = JSON.parse(req.body.data);
         try 
         { 
-            db.Node.findOne( { email: req.body.email }, function(err, dave) {                
+            db.Node.findOne({ email: data.email }, function (err, dave) {
             if (err)
             {
                 console.error('Error with user login: ' + err);
@@ -57,7 +59,7 @@ exports.UserModule = function(db)
             }
             else
             {
-                if (dave != null && dave.data.password == req.body.password)
+                if (dave != null && dave.data.password == data.password)
                 {
                     console.log('User & Password Matched');
                     res.json(true);
