@@ -30,7 +30,7 @@ function populateTable() {
   var tableContent = '';
 
   // jQuery AJAX call for JSON
-  $.getJSON( '/userlist', function( data ) {
+  $.getJSON( '/GetUsersList', function( data ) {
     
     // Stick our user data array into a userlist variable in the global object
     userListData = data;
@@ -93,7 +93,7 @@ function addUser(event) {
     $.ajax({
       type: 'POST',
       data: newUser,
-      url: '/adduser',
+      url: '/AddUser',
       dataType: 'JSON'
     }).done(function( response ) {
 
@@ -225,4 +225,4 @@ function deleteAll(event) {
 function validateEmail(email) { 
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
-} 
+ }
