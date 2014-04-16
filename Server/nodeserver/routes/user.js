@@ -45,19 +45,49 @@ exports.UserModule = function(db)
     * POST to adduser.
     */
     this.LogIn = function(req, res) {		
-		
-		    var data = req.params;
-		    if(req.method == "POST")
-		    {
-			    data = req.body;
-		    }
-		    var user = new User(data);
+        try 
+        { 
+            db.Node.findOne( { email: req.body.email }, function(err, dave) {                
+            if (err)
+            {
+                console.error('Error with user login: ' + err);
+                res.json(false);                
+                return ;
+            }
+            else
+            {
+                if (dave != null && dave.data.password == req.body.password)
+                {
+                    console.log('User & Password Matched');
+                    res.json(true);
+                    return ;
+                }
+                else
+                {
+                    res.json({msg:true});
+                }
+            }
+        })
+        }
+        catch (err2)
+        {
+            res.json(err2.msg);
+        }
+    };
 
-		    user.save(function(err, result) {
-                    res.json('');
-                    });
 
-	    }
+		//    var data = req.params;
+		//    if(req.method == "POST")
+		//    {
+		//	    data = req.body;
+		//    }
+		//    var user = new User(data);
+
+		//    user.save(function(err, result) {
+        //            res.json('');
+        //            });
+
+	    //}
 
         
     /*
