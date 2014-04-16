@@ -1,24 +1,111 @@
 
 exports.UserModule = function(db)
 {
-
     var User = db.Node.registerModel( 'User', { 
-			fields: {
-			  indexes: {
-				email: true
-			  },
-			  defaults: {
-				created_on: function()  {
-				  return new Date().getTime();
-				}
-			  }
+		fields: {
+			indexes: {
+			email: true
+			},
+			defaults: {
+			created_on: function()  {
+				return new Date().getTime();
 			}
-		  })
+			}
+		}
+		})
 
+
+     /*
+     * POST to adduser.
+     */
+    this.AddUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+
+		var data = req.params;
+		if(req.method == "POST")
+		{
+			data = req.body;
+		}
+		var user = new User(data);
+
+        try {
+            user.save(function(err, result) {
+                res.send({IsSuccess:true, UserID:result.id});
+                console.log('Success to add user');
+                });
+
+        } catch (err) 
+        {
+            console.log('Failed to add user: ' + err);
+            res.json({IsSuccess:false, Error:'Failed to register user'});
+        }
+	}
+        
+    /*
+    * POST to LogIn.
+    */
+    this.LogIn = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        try 
+        { 
+            db.Node.findOne( { email: req.body.email }, function(err, dave) {                
+            if (err)
+            {
+                console.error('Error with user login: ' + err);
+                res.json(false);                
+                return ;
+            }
+            else
+            {
+                if (dave != null && dave.data.password == req.body.password)
+                {
+                    console.log('User & Password Matched');
+                    res.json(true);
+                    return ;
+                }
+                else
+                {
+                    console.log('User & Password Unmatched');
+                    res.json(false);
+                }
+            }
+        })
+        }
+        catch (err2)
+        {
+            console.log('Error with user login: ' + err2);
+            res.json(false);
+        }
+    };
+
+
+         /*
+     * POST to adduser.
+     */
+    this.AskQuestion = function(req, res) {		
+		var data = req.params;
+		if(req.method == "POST")
+		{
+			data = req.body;
+		}
+		var user = new User(data);
+
+        try {
+            user.save(function(err, result) {
+                res.json(true);
+                });
+
+        } catch (err) 
+        {
+            console.log('Failed to add user: ' + err);
+            res.json(false);
+        }
+	}
+        
     /*
      * GET userlist page.
      */		  
-    this.userlist = function(req, res) {
+    this.GetUserslist = function(req, res) {
   
 	    var users = [];
 	
@@ -38,29 +125,8 @@ exports.UserModule = function(db)
 	
       };
 
-    /*
-     * POST to adduser.
-     */
 
-    this.adduser = function(req, res) {		
-		
-		    var data = req.params;
-		    if(req.method == "POST")
-		    {
-			    data = req.body;
-		    }
-		    var user = new User(data);
 
-		    user.save(function(err, result) {
-
-                    res.json('');
-                
-                    });
-
-	    }
-  
-
-    //------------------
     this.authenticateUser = function(req, res){
             db.Node.findOne( { email: req.body.user }, function(err, dave) {
                 try 
