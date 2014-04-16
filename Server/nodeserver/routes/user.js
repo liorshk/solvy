@@ -1,7 +1,6 @@
 
 exports.UserModule = function(db)
 {
-
     var User = db.Node.registerModel( 'User', { 
 			fields: {
 			  indexes: {
@@ -42,7 +41,7 @@ exports.UserModule = function(db)
      * POST to adduser.
      */
 
-    this.adduser = function(req, res) {		
+    this.AddUser = function(req, res) {		
 		
 		    var data = req.params;
 		    if(req.method == "POST")

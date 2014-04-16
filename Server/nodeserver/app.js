@@ -36,22 +36,23 @@ app.use(methodOverride()); 					// simulate DELETE and PUT
 app.get('/', routes.index);
 app.get('/userlist', user.userlist);
 //app.post('/adduser', user.adduser);
-app.get('/adduser/:username/:password/:email?', user.adduser);
+//app.get('/adduser/:username/:password/:email?', user.adduser);
 app.post('/login', user.authenticateUser);
 app.delete('/deleteall/', user.deleteall);
 
 // To Implemant.
 app.post('/AddUser', user.AddUser);
-app.post('/AskQuestion', user.AskQuestion);
-app.post('/AddAnswerToQuestion', user.userlist);
-app.get('/GetQuestions', user.userlist);
-app.get('/GetQuestionWithSolutions', user.userlist);
-app.get('/GetUserDetails', user.userlist);
-app.post('/EditDetails', user.userlist);
-app.get('/GetQuestionWithSolutions', user.userlist);
-app.get('/GetUserRating', user.userlist);
-app.get('/GetTopUsersRating', user.userlist);
-app.get('/GetRelevantTopUsersRating', user.userlist);
+//app.post('/LogIn', user.AddUser);
+//app.post('/AskQuestion', user.AskQuestion);
+//app.post('/AddAnswerToQuestion', user.userlist);
+//app.get('/GetQuestions', user.userlist);
+//app.get('/GetQuestionWithSolutions', user.userlist);
+//app.get('/GetUserDetails', user.userlist);
+//app.post('/EditDetails', user.userlist);
+//app.get('/GetQuestionWithSolutions', user.userlist);
+//app.get('/GetUserRating', user.userlist);
+//app.get('/GetTopUsersRating', user.userlist);
+//app.get('/GetRelevantTopUsersRating', user.userlist);
 
 
 // development only
