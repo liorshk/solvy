@@ -18,8 +18,33 @@ exports.UserModule = function(db)
      /*
      * POST to adduser.
      */
-
     this.AddUser = function(req, res) {		
+		
+		    var data = req.params;
+		    if(req.method == "POST")
+		    {
+			    data = req.body;
+		    }
+		    var user = new User(data);
+
+            try {
+                user.save(function(err, result) {
+                    res.json(true);
+                    });
+
+            } catch (err) 
+            {
+                console.log('Failed to add user: ' + err);
+                res.json(false);
+            }
+	    }
+
+
+        
+    /*
+    * POST to adduser.
+    */
+    this.LogIn = function(req, res) {		
 		
 		    var data = req.params;
 		    if(req.method == "POST")
@@ -34,11 +59,11 @@ exports.UserModule = function(db)
 
 	    }
 
+        
     /*
      * GET userlist page.
      */		  
-
-    this.userlist = function(req, res) {
+    this.GetUserslist = function(req, res) {
   
 	    var users = [];
 	
@@ -57,6 +82,7 @@ exports.UserModule = function(db)
         });
 	
       };
+
 
 
     this.authenticateUser = function(req, res){

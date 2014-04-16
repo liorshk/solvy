@@ -30,7 +30,7 @@ function populateTable() {
   var tableContent = '';
 
   // jQuery AJAX call for JSON
-  $.getJSON( '/userlist', function( data ) {
+  $.getJSON( '/GetUsersList', function( data ) {
     
     // Stick our user data array into a userlist variable in the global object
     userListData = data;
@@ -93,7 +93,7 @@ function addUser(event) {
     $.ajax({
       type: 'POST',
       data: newUser,
-      url: '/adduser',
+      url: '/AddUser',
       dataType: 'JSON'
     }).done(function( response ) {
 

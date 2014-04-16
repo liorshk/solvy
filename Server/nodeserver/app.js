@@ -34,15 +34,11 @@ app.use(bodyParser()); 					// pull information from html in POST
 app.use(methodOverride()); 					// simulate DELETE and PUT
 
 app.get('/', routes.index);
-app.get('/userlist', user.userlist);
 
-//app.get('/adduser/:username/:password/:email?', user.adduser);
-app.post('/login', user.authenticateUser);
-app.delete('/deleteall/', user.deleteall);
 
-// To Implemant.
-app.post('/AddUser', user.AddUser);
-//app.post('/LogIn', user.AddUser);
+// ----------------------------------------Methods To implements.--------------------------------------------
+app.post('/AddUser', user.AddUser); // return ture if success else false
+app.post('/LogIn', user.LogIn); // return ture if success else false
 //app.post('/AskQuestion', user.AskQuestion);
 //app.post('/AddAnswerToQuestion', user.userlist);
 //app.get('/GetQuestions', user.userlist);
@@ -53,6 +49,17 @@ app.post('/AddUser', user.AddUser);
 //app.get('/GetUserRating', user.userlist);
 //app.get('/GetTopUsersRating', user.userlist);
 //app.get('/GetRelevantTopUsersRating', user.userlist);
+
+
+// ----------------------------------------Methods For Debug.--------------------------------------------
+app.get('/GetUsersList', user.GetUserslist);
+app.delete('/deleteall/', user.deleteall);
+//app.get('/adduser/:username/:password/:email?', user.adduser);
+app.post('/login', user.authenticateUser);
+
+
+
+
 
 
 // development only
