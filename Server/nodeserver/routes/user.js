@@ -64,14 +64,16 @@ exports.UserModule = function(db)
                 }
                 else
                 {
-                    res.json({msg:true});
+                    console.log('User & Password Unmatched');
+                    res.json(false);
                 }
             }
         })
         }
         catch (err2)
         {
-            res.json(err2.msg);
+            console.log('Error with user login: ' + err2);
+            res.json(false);
         }
     };
 
