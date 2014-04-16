@@ -41,7 +41,7 @@ app.get('/', routes.index);
 // ----------------------------------------Methods To implements.--------------------------------------------
 app.post('/AddUser', user.AddUser); // return ture if success else false
 app.post('/LogIn', user.LogIn); // return ture if success else false
-app.post('/AskQuestion', user.AskQuestion);
+app.post('/AskQuestion', question.AskQuestion);
 //app.post('/AddAnswerToQuestion', user.userlist);
 //app.get('/GetQuestions', user.userlist);
 //app.get('/GetQuestionWithSolutions', user.userlist);
