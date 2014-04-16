@@ -23,7 +23,7 @@ user = new user.UserModule(neo4j);
 var app = express();
 
 // all environments
-app.set('port', process.env.PORT || 3000);
+app.set('port', 80);
 app.set('views', path.join(__dirname, 'views'));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'ejs');
@@ -35,7 +35,7 @@ app.use(methodOverride()); 					// simulate DELETE and PUT
 
 app.get('/', routes.index);
 app.get('/userlist', user.userlist);
-//app.post('/adduser', user.adduser);
+
 //app.get('/adduser/:username/:password/:email?', user.adduser);
 app.post('/login', user.authenticateUser);
 app.delete('/deleteall/', user.deleteall);

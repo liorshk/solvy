@@ -14,9 +14,30 @@ exports.UserModule = function(db)
 			}
 		  })
 
+
+     /*
+     * POST to adduser.
+     */
+
+    this.AddUser = function(req, res) {		
+		
+		    var data = req.params;
+		    if(req.method == "POST")
+		    {
+			    data = req.body;
+		    }
+		    var user = new User(data);
+
+		    user.save(function(err, result) {
+                    res.json('');
+                    });
+
+	    }
+
     /*
      * GET userlist page.
      */		  
+
     this.userlist = function(req, res) {
   
 	    var users = [];
@@ -37,29 +58,7 @@ exports.UserModule = function(db)
 	
       };
 
-    /*
-     * POST to adduser.
-     */
 
-    this.AddUser = function(req, res) {		
-		
-		    var data = req.params;
-		    if(req.method == "POST")
-		    {
-			    data = req.body;
-		    }
-		    var user = new User(data);
-
-		    user.save(function(err, result) {
-
-                    res.json('');
-                
-                    });
-
-	    }
-  
-
-    //------------------
     this.authenticateUser = function(req, res){
             db.Node.findOne( { email: req.body.user }, function(err, dave) {
                 try 
