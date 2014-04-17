@@ -81,7 +81,7 @@ exports.QuestionModule = function(db, fs)
      * GET questions list.
      */		  
     this.GetQuestions = function(req, res) {
-  
+        res.header('Access-Control-Allow-Origin', "*");
 	    var questions = [];
 	
         db.Graph
