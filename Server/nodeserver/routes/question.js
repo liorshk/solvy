@@ -22,7 +22,6 @@ exports.QuestionModule = function(db, fs)
      * POST to AskQuestion.
      */
     this.AskQuestion = function (req, res) {
-        res.header('Access-Control-Allow-Origin', "*");
 
 		var data = req.params;
 		if(req.method == "POST")
