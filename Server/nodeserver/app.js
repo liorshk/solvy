@@ -11,6 +11,7 @@ var user = require('./routes/user')
 var question = require('./routes/question')
 var tag = require('./routes/tag')
 var http = require('http');
+var fs = require('fs');
 var path = require('path');
 var ejs = require('ejs');
 ejs.open = '{{';
@@ -26,6 +27,19 @@ tag = new tag.TagModule(neo4j);
 
 var app = express();
 
+// Create the "uploads" folder if it doesn't exist
+fs.exists(__dirname + '/uploads', function (exists) {
+if (!exists) {
+    console.log('Creating directory ' + __dirname + '/uploads');
+    fs.mkdir(__dirname + '/uploads', function (err) {
+        if (err) {
+            console.log('Error creating ' + __dirname + '/uploads');
+            process.exit(1);
+        }
+    })
+}
+});
+
 // all environments
 app.set('port', 80);
 app.set('views', path.join(__dirname, 'views'));
@@ -34,11 +48,14 @@ app.set('view engine', 'ejs');
 
 app.use(express.static(path.join(__dirname, 'admin')));	// set the static files location
 app.use(morgan('dev')); 					// log every request to the console
-app.use(bodyParser()); 					// pull information from html in POST
+app.use(bodyParser({
+    uploadDir: __dirname + '/uploads',
+    keepExtensions: true
+})); 					// pull information from html in POST
 app.use(methodOverride()); 					// simulate DELETE and PUT
 
 app.get('/', routes.index);
-
+app.use(express.static(path.join(__dirname, './uploads')));
 
 // ----------------------------------------Methods To implements.--------------------------------------------
 app.post('/AddUser', user.AddUser); // return ture if success else false   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
