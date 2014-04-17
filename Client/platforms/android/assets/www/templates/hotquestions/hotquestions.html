@@ -1,98 +1,106 @@
-﻿<ion-view>
-    <ion-content>
+﻿<ion-pane>
+    <swipe-cards on-swipe="onSwipe($event)">
 
-        <swipe-cards on-swipe="onSwipe($event)">
-
-            <swipe-cards>
-                <swipe-card on-swipe="cardSwiped()" id="start-card">
-                    החלק למטה כדי לראות שאלות נוספות
-                </swipe-card>
-                <swipe-card ng-repeat="question in questionslides" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
-
-                    <div ng-controller="CardCtrl">
-                        <div class="item item-avatar">
-                            <img src="./img/student-clipart-3.png">
-                            <h2>{{question.username}}</h2>
-                        </div>
-
-                        <div class="item item-body">
-                            <img class="image" src="http://{{ip}}/{{question.imagePath.substr(question.imagePath.lastIndexOf('/') + 1)}}">
-                            <p>
-                                {{question.comment}}
-                            </p>
-                            <p>
-                                <a class="subdued" ng-repeat="tag in tags">
-                                    <b>{{question.tag.join(', ')}}</b>...
-                                </a>
-                                <a href="#" class="subdued">1 אנשים חושבים שהשאלה טובה</a>
-                                <a href="#" class="subdued">5 תשובות</a>
-                            </p>
-                        </div>
-
-                        <div class="item tabs tabs-secondary tabs-icon-left">
-                            <a class="tab-item" href="#">
-                                <i class="icon ion-thumbsup"></i>
-                                שאלה טובה
-                            </a>
-                            <a class="tab-item" href="#">
-                                <i class="icon ion-chatbox"></i>
-                                ענה
-                            </a>
-                            <a class="tab-item" href="#">
-                                <i class="icon ion-share"></i>
-                                שתף
-                            </a>
-                        </div>
-
+        <swipe-cards>
+            <swipe-card on-swipe="cardSwiped()" id="start-card">
+                החלק למטה כדי לראות שאלות נוספות
+            </swipe-card>
+            <swipe-card ng-repeat="question in questionslides" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
+                <div>
+                    <div class="item item-avatar">
+                        <img src="./img/student-clipart-3.png">
+                        <h2>{{question.username}}</h2>
+                        <h2>{{question.university}}</h2>
                     </div>
-                </swipe-card>
-            </swipe-cards>
+                    <div class="image">
+                        <img ng-src="http://{{ip}}/{{question.imagePath.substr(question.imagePath.lastIndexOf('/') + 1)}}">
+                    </div>
+                    <p>
+                        {{question.comment}}
+                    </p>
+                    <p>
+                        <a ng-repeat="tag in question.tags">{{question.tags[$index]}}</a>
+                    </p>
+                    <p>
+                        <a href="#" class="subdued">5 תשובות</a>
+                    </p>
+                </div>
+            </swipe-card>
         </swipe-cards>
-                <!--<div ng-if="questions.length > 0">
-                <slide-box>
-                    <slide ng-repeat="question in questions">
-                        <div class="list card">
+    </swipe-cards>
+</ion-pane>
+<!--<div class="item item-body">
+    <img class="full-image" src="http://{{ip}}/{{question.imagePath.substr(question.imagePath.lastIndexOf('/') + 1)}}">
+    <p>
+        {{question.comment}}
+    </p>
+    <p>
+        <a class="subdued" ng-repeat="tag in tags">
+            <b>{{question.tag.join(', ')}}</b>...
+        </a>
+        <a href="#" class="subdued">1 אנשים חושבים שהשאלה טובה</a>
+        <a href="#" class="subdued">5 תשובות</a>
+    </p>
+</div>-->
+<!--<div class="item tabs tabs-secondary tabs-icon-left">
+    <a class="tab-item" href="#">
+        <i class="icon ion-thumbsup"></i>
+        שאלה טובה
+    </a>
+    <a class="tab-item" href="#">
+        <i class="icon ion-chatbox"></i>
+        ענה
+    </a>
+    <a class="tab-item" href="#">
+        <i class="icon ion-share"></i>
+        שתף
+    </a>
+</div>-->
+<!--<div ng-if="questions.length > 0">
+    <slide-box>
+        <slide ng-repeat="question in questions">
+            <div class="list card">
 
-                            <div class="item item-avatar">
-                                <img src="./img/student-clipart-3.png">
-                                <h2>{{question.username}}</h2>
-                            </div>
+                <div class="item item-avatar">
+                    <img src="./img/student-clipart-3.png">
+                    <h2>{{question.username}}</h2>
+                </div>
 
-                            <div class="item item-body">
-                                <img class="full-image" src="http://{{ip}}/{{question.imagePath.substr(question.imagePath.lastIndexOf('/') + 1)}}">
-                                <p>
-                                    {{question.comment}}
-                                </p>
-                                <p>
-                                    <a class="subdued" ng-repeat="tag in tags">
-                                        <b>{{question.tag.join(', ')}}</b>...
-                                    </a>
-                                    <a href="#" class="subdued">1 אנשים חושבים שהשאלה טובה</a>
-                                    <a href="#" class="subdued">5 תשובות</a>
-                                </p>
-                            </div>
+                <div class="item item-body">
+                    <img class="full-image" src="http://{{ip}}/{{question.imagePath.substr(question.imagePath.lastIndexOf('/') + 1)}}">
+                    <p>
+                        {{question.comment}}
+                    </p>
+                    <p>
+                        <a class="subdued" ng-repeat="tag in tags">
+                            <b>{{question.tag.join(', ')}}</b>...
+                        </a>
+                        <a href="#" class="subdued">1 אנשים חושבים שהשאלה טובה</a>
+                        <a href="#" class="subdued">5 תשובות</a>
+                    </p>
+                </div>
 
-                            <div class="item tabs tabs-secondary tabs-icon-left">
-                                <a class="tab-item" href="#">
-                                    <i class="icon ion-thumbsup"></i>
-                                    שאלה טובה
-                                </a>
-                                <a class="tab-item" href="#">
-                                    <i class="icon ion-chatbox"></i>
-                                    ענה
-                                </a>
-                                <a class="tab-item" href="#">
-                                    <i class="icon ion-share"></i>
-                                    שתף
-                                </a>
-                            </div>
+                <div class="item tabs tabs-secondary tabs-icon-left">
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-thumbsup"></i>
+                        שאלה טובה
+                    </a>
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-chatbox"></i>
+                        ענה
+                    </a>
+                    <a class="tab-item" href="#">
+                        <i class="icon ion-share"></i>
+                        שתף
+                    </a>
+                </div>
 
-                        </div>
-                    </slide>
-                </slide-box>
             </div>
-            <div ng-if="questions.length == 0">
-                אין כרגע שאלות
-            </div>-->
-</ion-content>
-</ion-view>
+        </slide>
+    </slide-box>
+</div>
+<div ng-if="questions.length == 0">
+    אין כרגע שאלות
+</div>-->
+<!--</ion-content>
+</ion-view>-->
