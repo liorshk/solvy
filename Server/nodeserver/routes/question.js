@@ -30,7 +30,6 @@ exports.QuestionModule = function(db, fs)
 		    data = req.body;
             //data = JSON.parse(req.body.data);
 		}
-        console.log(data);
         if (true) ///(imagePath = SaveImageInStorage(req) != null)
         {
             data.imagePath = imagePath;

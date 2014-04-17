@@ -50,7 +50,9 @@ app.use(express.static(path.join(__dirname, 'admin')));	// set the static files 
 app.use(morgan('dev')); 					// log every request to the console
 app.use(bodyParser({
     uploadDir: __dirname + '/uploads',
-    keepExtensions: true
+    keepExtensions: true,
+    limit: 1024 * 1024 * 10,
+    defer: true
 })); 					// pull information from html in POST
 app.use(methodOverride()); 					// simulate DELETE and PUT
 
