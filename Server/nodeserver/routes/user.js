@@ -10,12 +10,12 @@ exports.UserModule = function(db)
 			defaults: {
 			created_on: function()  {
 				return new Date().getTime();
-			} 
+			}
                             , 
             user_id: function()  {
                 	return guid();
-            }
 			}
+		}
 		}
 		})
 
@@ -183,7 +183,7 @@ exports.UserModule = function(db)
 	    .delete('(n)')
 	    .exec(function(err, found){res.json('');});
       }
-    
+
     function guid() {
       function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
