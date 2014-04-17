@@ -59,7 +59,7 @@ app.use(multipart());
 app.use(methodOverride()); 					// simulate DELETE and PUT
 
 app.get('/', routes.index);
-app.get("/uploads",express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, './uploads')));
 
 // ----------------------------------------Methods To implements.--------------------------------------------
 app.post('/AddUser', user.AddUser); // return ture if success else false   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
