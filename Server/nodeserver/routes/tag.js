@@ -30,7 +30,7 @@ exports.TagModule = function(db)
             db.Graph
             .start()
             .match('(n:Tag)')
-            .where({ 'n.name': data.name })
+            .where({ 'n.name': data.tagName })
 	        .return('(n)')
 	        .limit(1, function(err, tag){            
                 if (IsErrorOccuer(err, res, 'Failed to search tag')) return;
@@ -38,7 +38,7 @@ exports.TagModule = function(db)
                 {
                     if (tag == null) // If tag not found, create the tag.
                     {
-                       tag = new Tag({name: data.name, rating: 0});
+                       tag = new Tag({name: data.tagName, rating: 0});
                        try {
                             tag.save(function(err, result) {
                                 if (IsErrorOccuer(err, res, 'Failed to save new tag')) 
@@ -76,25 +76,132 @@ exports.TagModule = function(db)
     // return true if success.
     function CreateRelationUserTag(userId, tag, res)
     {
-        var x = db.Node.findById(parseInt(userId, 10));
+        //var x = db.Node.findById(parseInt(userId, 10));
         db.Graph
             .start()
             .match('(n:User)')
             .where({ 'n.user_id': userId })
 	        .return('(n)')
 	        .limit(1, function(err, user){            
-                if (IsErrorOccuer(err, res, 'Failed when try to update tag rating')) return false;
+                if (IsErrorOccuer(err, res, 'Failed to create tag user relation')) return false;
                 else
                 {
                     user.createRelationTo(tag, 'folowing',function(err, dave){  
-                    if (IsErrorOccuer(err, res, 'Failed when try to update tag rating')) return false;
+                    if (IsErrorOccuer(err, res, 'Failed to create tag user relation')) return false;
                     else
                         return true;});
                 }}
             );
     }
 
+    /*
+    * POST to SetTagToUser.
+    */
+    this.SetTagToQuestion = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
 
+        //var data = JSON.parse(req.body.data);
+        var data = req.body;
+        try 
+        {
+            // Check if the tag exist.
+            var users = [];
+            db.Graph
+            .start()
+            .match('(n:Tag)')
+            .where({ 'n.name': data.tagName })
+	        .return('(n)')
+	        .limit(1, function(err, tag){            
+                if (IsErrorOccuer(err, res, 'Failed to search tag')) return;
+                else // Success the operation.
+                {
+                    if (tag == null) // If tag not found, create the tag.
+                    {
+                       tag = new Tag({name: data.tagName, rating: 0});
+                       try {
+                            tag.save(function(err, result) {
+                                if (IsErrorOccuer(err, res, 'Failed to save new tag')) 
+                                    return;
+                            });
+                        } 
+                        catch (err) {
+                            if (IsErrorOccuer(err, res, 'Failed to save new tag')) return;
+                        }
+                    }
+
+                    if (!CreateRelationQuestionTag(data.questionId, tag, res)) // If failed  
+                        return ;
+                }
+            })
+        }
+        catch (err2)
+        {
+            if (IsErrorOccuer(err2, res, 'Failed to add tag for user')) return;
+        }
+        res.json({IsSuccess:true});  
+    };
+
+    // return true if success.
+    function CreateRelationQuestionTag(questionId, tag, res)
+    {
+        //var x = db.Node.findById(parseInt(questionId, 10));
+        db.Graph
+            .start()
+            .match('(n:Question)')
+            .where({ 'n.question_id': questionId })
+	        .return('(n)')
+	        .limit(1, function(err, question){            
+                if (IsErrorOccuer(err, res, 'Failed to create tag question relation')) return false;
+                else
+                {
+                    question.createRelationTo(tag, 'question_type',function(err, dave){  
+                    if (IsErrorOccuer(err, res, 'Failed to create tag question relation')) return false;
+                    else
+                        return true;});
+                }}
+            );
+    }
+
+     /*
+     * GET userlist page.
+     */		  
+    this.GetTagsStartWith = function(req, res) {
+        try
+         {
+             db.Graph
+            .request()
+            .query("MATCH (t:Tag) MATCH t.name =~ " + req.params.tagName + "*" + "RETURN t;", function(err, found){
+		        if(found != null)
+		        {
+			        found.forEach(function(entry) {
+				        users.push(entry.data);
+			        });
+		        }
+		        res.json(found);
+            });
+
+
+            
+            // db.Graph
+            //.start()
+            //.match('(n:Tag)')
+            //.where({'n.name' : req.params.tagName + "*"})
+	        //.return('(n)')
+	        //.exec(function(err, found){
+		    //    if(found != null)
+		    //    {
+			//        found.forEach(function(entry) {
+			//	        users.push(entry.data);
+			//        });
+		    //    }
+		    //    res.json(found);
+            //});
+        }
+        catch (err) {
+
+        }
+	
+      };
 
      /*
      * POST to AskQuestion.

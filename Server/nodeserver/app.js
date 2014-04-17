@@ -43,11 +43,12 @@ app.get('/', routes.index);
 // ----------------------------------------Methods To implements.--------------------------------------------
 app.post('/AddUser', user.AddUser); // return ture if success else false   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
 app.post('/LogIn', user.LogIn); // return ture if success else false       | {"email":"asdasdasdasd","password":"123123"}
-app.post('/SetTagToUser', tag.SetTagToUser); //                            | {"name":"KingTad","userId":"2a207069-1776-995f-5bf1-f77cbf5624c3"}
-//app.get('/GetTagsStartWith', user.GetTagsStartWith);
-//app.post('/AskQuestion', question.AskQuestion);
+app.post('/SetTagToUser', tag.SetTagToUser); //                            | {"tagName":"KingTad","userId":"2a207069-1776-995f-5bf1-f77cbf5624c3"}
+app.post('/SetTagToQuestion', tag.SetTagToQuestion); //                    | {"tagName":"KingTad","questionId":"e79ccbbf-e8a8-f118-9afc-f5a37d728a14"}
+app.get('/GetTagsStartWith/:tagName', tag.GetTagsStartWith);
+app.post('/AskQuestion', question.AskQuestion);     //                     | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
 //app.post('/AddAnswerToQuestion', user.userlist);
-//app.get('/GetQuestions', user.userlist);
+app.get('/GetQuestions', question.GetQuestions);           //                      |
 //app.get('/GetQuestionWithSolutions', user.userlist);
 //app.get('/GetUserDetails', user.userlist);
 //app.post('/EditDetails', user.userlist);
