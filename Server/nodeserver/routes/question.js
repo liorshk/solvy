@@ -59,6 +59,7 @@ exports.QuestionModule = function(db, fs)
 
     // return the image path if success else null.
     function SaveImageInStorage(req) {
+        console.log(req.files);
         // get the temporary location of the file
         var tmp_path = req.files.thumbnail.path;
         // set where the file should actually exists - in this case it is in the "images" directory
