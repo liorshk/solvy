@@ -82,7 +82,7 @@ angular.module('starter.controllers', ['ngTagsInput'])
 	})
 
     .controller('HotQuestionsCtrl', function ($scope, $ionicSwipeCardDelegate, QuestionService) {
-        $scope.ip = "54.72.160.154";
+        $scope.ip = "192.168.56.1";
 
         QuestionService.getQuestions();
         $scope.questionslides = [];

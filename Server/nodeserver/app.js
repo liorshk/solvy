@@ -68,8 +68,9 @@ app.post('/SetTagToUser', tag.SetTagToUser); //                            | {"t
 app.post('/SetTagToQuestion', tag.SetTagToQuestion); //                    | {"tagName":"KingTad","questionId":"e79ccbbf-e8a8-f118-9afc-f5a37d728a14"}
 app.get('/GetTagsStartWith/:tagName', tag.GetTagsStartWith);
 app.post('/AskQuestion', question.AskQuestion);     //                     | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
-//app.post('/AddAnswerToQuestion', user.userlist);
-app.get('/GetQuestions', question.GetQuestions);           //                      |
+app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //       | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
+app.get('/GetAllSolutionForQuestion/:questionId', solution.GetAllSolutionForQuestion);
+app.get('/GetQuestions', question.GetQuestions);           //              |
 //app.get('/GetQuestionWithSolutions', user.userlist);
 //app.get('/GetUserDetails', user.userlist);
 //app.post('/EditDetails', user.userlist);

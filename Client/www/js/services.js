@@ -1,7 +1,7 @@
 angular.module('starter.services', [])
 
     .factory('UserService', function ($http, $rootScope, $state, $window) {
-        var ip = "54.72.160.154";
+        var ip = "192.168.56.1";
         //var ip = "10.10.8.90";
         var user = {};
 
