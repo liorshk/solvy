@@ -70,6 +70,7 @@ angular.module('starter.services', [])
 	    var ip = "54.72.160.154";
 	    //var ip = "10.10.8.90";
 	    var question = {};
+	    var answers = {};
 
 	    return {
 	        setImageUri: function (imageuri) {
@@ -113,6 +114,21 @@ angular.module('starter.services', [])
 	            options.params = params;
 	            var ft = new FileTransfer();
 	            ft.upload(question.imageuri, "http://" + ip + "/AskQuestion", function () { $state.go('hotquestions'); }, function () { }, options);
+	        },
+
+	        addAnswer: function () {
+	            var options = new FileUploadOptions();
+	            options.fileKey = "file";
+	            options.fileName = answer.imageuri.substr(answer.imageuri.lastIndexOf('/') + 1) + '.jpg';
+	            options.mimeType = "image/jpeg";
+	            
+	            var params = {};
+	            params.comment = answer.comment;
+	            params.username = $window.localStorage.getItem("username");
+	            params.tags = answer.tags;
+	            options.params = params;
+	            var ft = new FileTransfer();
+	            ft.upload(answer.imageuri, "http://" + ip + "/AddAnswer", function () { $state.go('hotquestions'); }, function () { }, options);
 	        }
 	    }
 	});

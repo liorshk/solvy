@@ -56,17 +56,22 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.cards','starter.services',
             // Ask Question
           .state('askquestion', {
               url: "/askquestion",
-              templateUrl: "templates/askquestion/askquestion.html",
+              templateUrl: "templates/questions/askquestion.html",
               controller: 'AskQuestionCtrl'
           })
 
 	    // Ask Question
 	    .state('hotquestions', {
 	        url: "/hotquestions",
-	        templateUrl: "templates/hotquestions/hotquestions.html",
+	        templateUrl: "templates/questions/hotquestions.html",
 	        controller: 'HotQuestionsCtrl'
+	    })
+	    // Add Answer
+	    .state('addanswer', {
+	        url: "/addanswer",
+	        templateUrl: "templates/questions/addanswer.html",
+	        controller: 'AddAnswerCtrl'
 	    });
-
 
 	    $urlRouterProvider.otherwise("/login");
 

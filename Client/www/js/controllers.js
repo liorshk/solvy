@@ -80,6 +80,46 @@ angular.module('starter.controllers', ['ngTagsInput'])
 	    };
 	})
 
+    .controller('AskAnswerCtrl', function ($scope, $state, QuestionService, UserService) {
+
+        $scope.showIt = false;
+
+        $scope.takePic = function () {
+            navigator.camera.getPicture(onSuccess, onFail, {
+                quality: 45,
+                //destinationType: Camera.DestinationType.DATA_URL
+                destinationType: Camera.DestinationType.FILE_URI,
+                encodingType: Camera.EncodingType.JPEG,
+                sourceType: Camera.PictureSourceType.CAMERA
+            });
+
+        }
+
+        var onSuccess = function (imageUri) {
+            $scope.picData = imageUri;
+
+            $scope.showIt = true;
+            $scope.$apply();
+            QuestionService.setImageUri(imageUri);
+        };
+
+        var onFail = function (e) {
+            console.log("On fail " + e);
+        }
+
+        $scope.submit = function () {
+            QuestionService.setComment($scope.comment);
+            QuestionService.setTags($scope.tags);
+            QuestionService.askQuestion();
+        }
+
+        $scope.tags = [];
+
+        $scope.loadTags = function () {
+            return [];//$http.get('tags.json');
+        };
+    })
+
     .controller('HotQuestionsCtrl', function ($scope, $ionicSwipeCardDelegate, QuestionService) {
         $scope.ip = "54.72.160.154";
 
