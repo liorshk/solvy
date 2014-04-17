@@ -1,5 +1,5 @@
 ﻿
-exports.QuestionModule = function(db)
+exports.QuestionModule = function(db, fs)
 {
     var Question = db.Node.registerModel('Question', { 
 		fields: {
@@ -30,20 +30,51 @@ exports.QuestionModule = function(db)
 		    data = req.body;
             //data = JSON.parse(req.body.data);
 		}
-		var question = new Question(data);
 
-        try {
-            question.save(function(err, result) {
-                res.send({IsSuccess:true, QuestionID:result.data.question_id});
-                console.log('Success to add question');
-                });
-
-        } catch (err) 
+        if (imagePath = SaveImageInStorage(req) != null)
         {
-            console.log('Failed to add question: ' + err);
-            res.json({IsSuccess:false, Error:'Failed to add question'});
+            data.imagePath = imagePath;
+            var question = new Question(data);
+
+            try {
+                question.save(function(err, result) {
+                    res.send({IsSuccess:true, QuestionID:result.data.question_id});
+                    console.log('Success to add question');
+                    });
+
+            } catch (err) 
+            {
+                console.log('Failed to add question: ' + err);
+                res.json({IsSuccess:false, Error:'Failed to add question'});
+            }
         }
+        else
+        {
+            console.log('Failed to add image question');
+            res.json({IsSuccess:false, Error:'Failed to add image question'});
+        }
+
+	
 	}
+
+    // return the image path if success else null.
+    function SaveImageInStorage(req) {
+        // get the temporary location of the file
+        var tmp_path = req.files.thumbnail.path;
+        // set where the file should actually exists - in this case it is in the "images" directory
+        var target_path = './uploads/' + guid() + ".jpg";
+        // move the file from the temporary location to the intended location
+        fs.rename(tmp_path, target_path, function(err) {
+            if (err) throw err;
+            // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
+            fs.unlink(tmp_path, function() {
+                if (err) throw err;
+                console.log('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+            });
+        });
+
+    }
+
         
     function guid() {
       function s4() {
@@ -79,5 +110,4 @@ exports.QuestionModule = function(db)
         });
 	
       };
-
 }

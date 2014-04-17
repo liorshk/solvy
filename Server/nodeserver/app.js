@@ -22,7 +22,7 @@ var Neo4jMapper = require('neo4jmapper');
 var neo4j = new Neo4jMapper('http://54.72.160.154:7474/');
 
 user = new user.UserModule(neo4j);
-question = new question.QuestionModule(neo4j);
+question = new question.QuestionModule(neo4j, fs);
 tag = new tag.TagModule(neo4j);
 
 var app = express();
@@ -80,11 +80,6 @@ app.get('/GetUsersList', user.GetUserslist);
 app.delete('/deleteall/', user.deleteall);
 //app.get('/adduser/:username/:password/:email?', user.adduser);
 app.post('/login', user.authenticateUser);
-
-
-
-
-
 
 // development only
 if ('development' == app.get('env')) {
