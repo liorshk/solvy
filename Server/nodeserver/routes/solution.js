@@ -24,7 +24,7 @@ exports.SolutionModule = function(db, fs)
      * POST to AskSolution.
      */
     this.AddAnswerToQuestion = function (req, res) {
-
+        res.header('Access-Control-Allow-Origin', "*");
 		var data = req.params;
 		if(req.method == "POST")
 		{

@@ -10,6 +10,7 @@ var multipart = require('connect-multiparty');
 var routes = require('./routes');
 var user = require('./routes/user')
 var question = require('./routes/question')
+var solution = require('./routes/solution')
 var tag = require('./routes/tag')
 var http = require('http');
 var fs = require('fs');
@@ -25,6 +26,7 @@ var neo4j = new Neo4jMapper('http://54.72.160.154:7474/');
 user = new user.UserModule(neo4j);
 question = new question.QuestionModule(neo4j, fs);
 tag = new tag.TagModule(neo4j);
+solution = new solution.SolutionModule(neo4j,fs);
 
 var app = express();
 
