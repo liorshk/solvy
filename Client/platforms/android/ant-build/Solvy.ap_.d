@@ -29,11 +29,14 @@ C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\Web.config \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\css\ng-tags-input.css \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\css\ng-tags-input.min.css \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\css\style.css \
+C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\ask.png \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\camera_icon_1.jpeg \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\icon.png \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\ionic.png \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\main.png \
+C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\qaa.jpg \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\student-clipart-3.png \
+C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img\ua.jpg \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\js\app.js \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\js\controllers.js \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\js\directives.js \

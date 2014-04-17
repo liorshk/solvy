@@ -80,7 +80,10 @@ angular.module('starter.services', [])
 	            question.comment = comment;
 	        },
 	        setTags: function (tags) {
-	            question.tags = tags;
+	            question.tags = [];
+	            tags.forEach(function (tag) {
+	                question.tags.push(tag.text);
+	            });
 	        },
 
 	        getQuestions: function () {
@@ -106,6 +109,7 @@ angular.module('starter.services', [])
 	            var params = {};
 	            params.comment = question.comment;
 	            params.username = $window.localStorage.getItem("username");
+	            params.tags = question.tags;
 	            options.params = params;
 	            var ft = new FileTransfer();
 	            ft.upload(question.imageuri, "http://" + ip + "/AskQuestion", function () { $state.go('hotquestions'); }, function () { }, options);

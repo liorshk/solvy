@@ -115,3 +115,167 @@ a{
 .swipe-card.pop-in {
   -webkit-animation: bounceIn 0.3s ease-out;
 }
+body{
+ background:#ccc; 
+}
+
+/*  Animation  */
+.blockPosition{
+position:fixed;
+top:250px;
+left:20px;
+}
+
+.movingBlock
+{
+    background-image:url("../img/qaa.jpg");
+    background-size:contain;
+    background-repeat:no-repeat;
+    width:100px;
+    height:120px;
+    position:relative;
+    opacity:.8;
+    animation:boxes1 5s;
+    -moz-animation:boxes1 5s; /* Firefox */
+    -webkit-animation:boxes1 5s; /* Safari and Chrome */
+    -o-animation:boxes1 5s; /* Opera */
+    z-index:-999;
+}
+
+
+
+@keyframes boxes1
+{
+0%   {left:100px; top:0px;}
+
+100% { left:0px; top:0px;}
+}
+
+@-moz-keyframes boxes1 /* Firefox */
+{
+0%   { left:100px; top:0px;}
+
+100% { left:0px; top:0px;}
+}
+
+@-webkit-keyframes boxes1 /* Safari and Chrome */
+{
+0%   { left:100px; top:0px;}
+
+100% {left:0px; top:0px;}
+}
+
+@-o-keyframes boxes1 /* Opera */
+{
+0%   {left:100px; top:0px;}
+
+100% {left:0px; top:0px;}
+}
+
+/* Animation 2 */
+
+.blockPosition2{
+position:fixed;
+top:250px;
+left:220px;
+}
+
+.movingBlock2
+{
+    background-image:url("../img/ua.jpg");
+    background-size:contain;
+    background-repeat:no-repeat;
+    width:100px;
+    height:120px;
+    position:relative;
+    animation:boxes2 5s;
+    -moz-animation:boxes2 5s; /* Firefox */
+    -webkit-animation:boxes2 5s; /* Safari and Chrome */
+    -o-animation:boxe2s 5s; /* Opera */
+    opacity:.8;
+    z-index:-999;
+}
+
+
+@keyframes boxes2
+{
+0%   { right:200px; top:0px;}
+
+100% { right:0px; top:0px;}
+}
+
+@-moz-keyframes boxes2 /* Firefox */
+{
+0%   {right:200px; top:0px;}
+
+100% {right:0px; top:0px;}
+}
+
+@-webkit-keyframes boxes2 /* Safari and Chrome */
+{
+0%   { right:200px; top:0px;}
+
+100% { right:0px; top:0px;}
+}
+
+@-o-keyframes boxes2 /* Opera */
+{
+0%   { right:200px; top:0px;}
+
+100% { right:0px; top:0px;}
+}
+
+/*  Animation 3 */
+
+
+.blockPosition3{
+position:fixed;
+top:160px;
+left:120px;
+}
+
+.movingBlock3
+{
+    background-image:url("../img/camera_icon_1.jpeg");
+    background-size:contain;
+    background-repeat:no-repeat;
+    width:100px;
+    height:120px;
+    position:relative;
+    z-index:-999;
+    opacity:.8;
+    animation:boxes3 5s;
+    -moz-animation:boxes3 5s; /* Firefox */
+    -webkit-animation:boxes3 5s; /* Safari and Chrome */
+    -o-animation:boxes3 5s; /* Opera */
+}
+
+
+
+@keyframes boxes3
+{
+0%   { right:100px; top:0px;}
+
+100% {right:0px; top:0px;}
+}
+
+@-moz-keyframes boxes3 /* Firefox */
+{
+0%   { right:100px; top:0px;}
+
+100% { right:0px; top:0px;}
+}
+
+@-webkit-keyframes boxes3 /* Safari and Chrome */
+{
+0%   { right:100px; top:0px;}
+
+100% {right:0px; top:0px;}
+}
+
+@-o-keyframes boxes3 /* Opera */
+{
+0%   {right:100px; top:0px;}
+
+100% {right:0px; top:0px;}
+}
