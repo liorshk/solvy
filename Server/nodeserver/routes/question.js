@@ -28,9 +28,9 @@ exports.QuestionModule = function(db, fs)
 		if(req.method == "POST")
 		{
 		    data = req.body;
-            //data = JSON.parse(req.body.data);
 		}
-        if (true) ///(imagePath = SaveImageInStorage(req) != null)
+		var imagePath = SaveImageInStorage(req);
+		if (imagePath != null)
         {
             data.imagePath = imagePath;
             var question = new Question(data);
@@ -52,29 +52,18 @@ exports.QuestionModule = function(db, fs)
             console.log('Failed to add image question');
             res.json({IsSuccess:false, Error:'Failed to add image question'});
         }
-
-	
-	}
-
-    // return the image path if success else null.
-    function SaveImageInStorage(req) {
-        console.log(req);
-        // get the temporary location of the file
-        var tmp_path = req.files.thumbnail.path;
-        // set where the file should actually exists - in this case it is in the "images" directory
-        var target_path = './uploads/' + guid() + ".jpg";
-        // move the file from the temporary location to the intended location
-        fs.rename(tmp_path, target_path, function(err) {
-            if (err) throw err;
-            // delete the temporary file, so that the explicitly set temporary upload dir does not get filled with unwanted files
-            fs.unlink(tmp_path, function() {
-                if (err) throw err;
-                console.log('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-            });
-        });
-
     }
 
+    function SaveImageInStorage(req) {
+        var file = req.files.file,
+            filePath = file.path;
+        var newPath = 'uploads/' + guid() + ".jpg";
+        fs.rename(filePath, newPath, function (err) {
+            if (err) throw err;
+            console.log(newPath);
+        });
+        return newPath;
+    }
         
     function guid() {
       function s4() {

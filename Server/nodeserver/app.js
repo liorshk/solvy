@@ -6,6 +6,7 @@ var express        = require('express');
 var morgan         = require('morgan');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
+var multipart = require('connect-multiparty');
 var routes = require('./routes');
 var user = require('./routes/user')
 var question = require('./routes/question')
@@ -51,9 +52,10 @@ app.use(morgan('dev')); 					// log every request to the console
 app.use(bodyParser({
     uploadDir: __dirname + '/uploads',
     keepExtensions: true,
-    limit: 1024 * 1024 * 10,
+    limit: 1024 * 1024 * 1024 * 10,
     defer: true
 })); 					// pull information from html in POST
+app.use(multipart());
 app.use(methodOverride()); 					// simulate DELETE and PUT
 
 app.get('/', routes.index);
