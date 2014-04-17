@@ -4,12 +4,17 @@ exports.UserModule = function(db)
     var User = db.Node.registerModel( 'User', { 
 		fields: {
 			indexes: {
+            user_id: true,
 			email: true
 			},
 			defaults: {
 			created_on: function()  {
 				return new Date().getTime();
-			}
+			} 
+                            , 
+            user_id: function()  {
+                	return guid();
+            }
 			}
 		}
 		})
@@ -24,13 +29,14 @@ exports.UserModule = function(db)
 		var data = req.params;
 		if(req.method == "POST")
 		{
-		    data = JSON.parse(req.body.data);
+		    data = req.body;
+            //data = JSON.parse(req.body.data);
 		}
 		var user = new User(data);
 
         try {
             user.save(function(err, result) {
-                res.send({IsSuccess:true, UserID:result.id});
+                res.send({IsSuccess:true, UserID:result.data.user_id});
                 console.log('Success to add user');
                 });
 
@@ -47,7 +53,8 @@ exports.UserModule = function(db)
     this.LogIn = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
 
-        var data = JSON.parse(req.body.data);
+        //var data = JSON.parse(req.body.data);
+        var data = req.body;
         try 
         { 
             //db.Node.findOne( { email: req.body.email }, function(err, dave) { 
@@ -176,5 +183,13 @@ exports.UserModule = function(db)
 	    .delete('(n)')
 	    .exec(function(err, found){res.json('');});
       }
-
+    function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+         s4() + '-' + s4() + s4() + s4();
+}
 }

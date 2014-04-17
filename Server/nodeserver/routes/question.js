@@ -1,7 +1,7 @@
 ﻿
 exports.QuestionModule = function(db)
 {
-    var question = db.Node.registerModel( 'Question', { 
+    var Question = db.Node.registerModel('Question', { 
 		fields: {
 			defaults: {
 			created_on: function()  {

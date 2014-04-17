@@ -9,6 +9,7 @@ var methodOverride = require('method-override');
 var routes = require('./routes');
 var user = require('./routes/user')
 var question = require('./routes/question')
+var tag = require('./routes/tag')
 var http = require('http');
 var path = require('path');
 var ejs = require('ejs');
@@ -21,6 +22,7 @@ var neo4j = new Neo4jMapper('http://54.72.160.154:7474/');
 
 user = new user.UserModule(neo4j);
 question = new question.QuestionModule(neo4j);
+tag = new tag.TagModule(neo4j);
 
 var app = express();
 
@@ -39,9 +41,11 @@ app.get('/', routes.index);
 
 
 // ----------------------------------------Methods To implements.--------------------------------------------
-app.post('/AddUser', user.AddUser); // return ture if success else false
-app.post('/LogIn', user.LogIn); // return ture if success else false
-app.post('/AskQuestion', question.AskQuestion);
+app.post('/AddUser', user.AddUser); // return ture if success else false   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
+app.post('/LogIn', user.LogIn); // return ture if success else false       | {"email":"asdasdasdasd","password":"123123"}
+app.post('/SetTagToUser', tag.SetTagToUser); //                            | {"name":"KingTad","userId":"2a207069-1776-995f-5bf1-f77cbf5624c3"}
+//app.get('/GetTagsStartWith', user.GetTagsStartWith);
+//app.post('/AskQuestion', question.AskQuestion);
 //app.post('/AddAnswerToQuestion', user.userlist);
 //app.get('/GetQuestions', user.userlist);
 //app.get('/GetQuestionWithSolutions', user.userlist);
