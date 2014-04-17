@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-    .factory('UserService', function ($http, $rootScope, $state) {
+    .factory('UserService', function ($http, $rootScope, $state, $window) {
         var ip = "54.72.160.154";
         //var ip = "10.10.8.90";
         var user = {};
@@ -41,6 +41,7 @@ angular.module('starter.services', [])
 
             login: function (user) {
                 this.user = user;
+                $window.localStorage.setItem("username", user.username);
                 $http({
                     url: "http://"+ip+"/LogIn",
                     method: "POST",
@@ -65,16 +66,15 @@ angular.module('starter.services', [])
             }
         }
     })
-
-
-	.factory('QuestionService', function ($http, $rootScope, $state, UserService) {
+	.factory('QuestionService', function ($http, $rootScope, $state, $window) {
 	    var ip = "54.72.160.154";
 	    //var ip = "10.10.8.90";
 	    var question = {};
 
 	    return {
-	        setImageData: function (imagedata) {
-	            question.imagedata = imagedata;
+	        setImageUri: function (imageuri) {
+	            question.imageuri = imageuri;
+	            $rootScope.message = question.imageuri;
 	        },
 	        setComment: function (comment) {
 	            question.comment = comment;
@@ -94,23 +94,21 @@ angular.module('starter.services', [])
                 })
                 .error(function (data, status, headers, config) { // optional
                     // failed
-                }
-                );
+                })
 	        },
 
-	        askQuestion: function (imageURI) {
+	        askQuestion: function () {
 	            var options = new FileUploadOptions();
 	            options.fileKey = "file";
-	            options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1) + '.jpg';
+	            options.fileName = question.imageuri.substr(question.imageuri.lastIndexOf('/') + 1) + '.jpg';
 	            options.mimeType = "image/jpeg";
-
-	            var params = new Object();
+	            
+	            var params = {};
 	            params.comment = question.comment;
-	            params.username = UserService.getUser().username;
+	            params.username = $window.localStorage.getItem("username");
 	            options.params = params;
-
 	            var ft = new FileTransfer();
-	            ft.upload(imageURI, "http://"+ip+"/AskQuestion", function () { }, onFail, options);
+	            ft.upload(question.imageuri, "http://" + ip + "/AskQuestion", function () { $state.go('hotquestions'); }, function () { }, options);
 	        }
 	    }
 	});

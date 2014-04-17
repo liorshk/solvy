@@ -6,18 +6,18 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
-	 .run(function($ionicPlatform) {
-	   $ionicPlatform.ready(function() {
-		 if(window.StatusBar) {
-		   //org.apache.cordova.statusbar required
-		   StatusBar.styleDefault();
-		 }
-	   });
+angular.module('starter', ['ionic', 'ionic.contrib.ui.cards','starter.services', 'starter.controllers'])
+	 .run(function ($ionicPlatform) {
+	     $ionicPlatform.ready(function () {
+	         if (window.StatusBar) {
+	             //org.apache.cordova.statusbar required
+	             StatusBar.styleDefault();
+	         }
+	     });
 	 })
 
 	.config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
-        // Login
+	    // Login
 	    $stateProvider
           .state('login', {
               url: "/login",
@@ -70,6 +70,19 @@ angular.module('starter', ['ionic', 'starter.services', 'starter.controllers'])
 
 	    $urlRouterProvider.otherwise("/login");
 
-	});
+	})
+
+.directive('noScroll', function ($document) {
+
+    return {
+        restrict: 'A',
+        link: function ($scope, $element, $attr) {
+
+            $document.on('touchmove', function (e) {
+                e.preventDefault();
+            });
+        }
+    }
+});
 
 	

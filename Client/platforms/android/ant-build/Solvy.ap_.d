@@ -14,12 +14,12 @@ C:\Users\Lior\workspace\Solvy\Client\platforms\android\ant-build\res\drawable-xh
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\_where-is-www.txt \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\config.xml \
-C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\config.zip \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\cordova.js \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\cordova_plugins.js \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\css \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\img \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\index.html \
+C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\index.zip \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\js \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\lib \
 C:\Users\Lior\workspace\Solvy\Client\platforms\android\assets\www\plugins \
