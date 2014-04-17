@@ -30,8 +30,8 @@ exports.QuestionModule = function(db, fs)
 		    data = req.body;
             //data = JSON.parse(req.body.data);
 		}
-
-        if (imagePath = SaveImageInStorage(req) != null)
+        console.log(data);
+        if (true) ///(imagePath = SaveImageInStorage(req) != null)
         {
             data.imagePath = imagePath;
             var question = new Question(data);
