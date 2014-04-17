@@ -1,0 +1,45 @@
+﻿<ion-slide-box ng-if="questions.length > 0">
+    <ion-slide ng-repeat="question in questions">
+        <div class="list card">
+
+            <div class="item item-avatar">
+                <img src="./img/student-clipart-3.png">
+                <h2>{{question.email}}</h2>
+            </div>
+
+            <div class="item item-body">
+                <img class="full-image" src="http://{{ip}}/{{question.imagePath}}">
+                <p>
+                    {{question.comment}}
+                </p>
+                <p>
+                    <a class="subdued" ng-repeat="tag in tags">
+                        <b>{{question.tag.join(', ')}}</b>...
+                    </a>
+                    <a href="#" class="subdued">1 אנשים חושבים שהשאלה טובה</a>
+                    <a href="#" class="subdued">5 תשובות</a>
+                </p>
+            </div>
+
+            <div class="item tabs tabs-secondary tabs-icon-left">
+                <a class="tab-item" href="#">
+                    <i class="icon ion-thumbsup"></i>
+                    שאלה טובה
+                </a>
+                <a class="tab-item" href="#">
+                    <i class="icon ion-chatbox"></i>
+                    ענה
+                </a>
+                <a class="tab-item" href="#">
+                    <i class="icon ion-share"></i>
+                    שתף
+                </a>
+            </div>
+
+        </div>
+    </ion-slide>
+</ion-slide-box>
+
+<div ng-if="questions.length > 0">
+    אין כרגע שאלות
+</div>
