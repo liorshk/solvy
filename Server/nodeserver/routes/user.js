@@ -29,8 +29,8 @@ exports.UserModule = function(db)
 		var data = req.params;
 		if(req.method == "POST")
 		{
-		    data = req.body;
-            //data = JSON.parse(req.body.data);
+		    //data = req.body;
+            data = JSON.parse(req.body.data);
 		}
 		var user = new User(data);
 
@@ -53,8 +53,8 @@ exports.UserModule = function(db)
     this.LogIn = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
 
-        //var data = JSON.parse(req.body.data);
-        var data = req.body;
+        var data = JSON.parse(req.body.data);
+        //var data = req.body;
         try 
         { 
             //db.Node.findOne( { email: req.body.email }, function(err, dave) { 
