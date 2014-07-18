@@ -8,10 +8,10 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var multipart = require('connect-multiparty');
 var routes = require('./routes');
-var user = require('./routes/user')
-var question = require('./routes/question')
-var solution = require('./routes/solution')
-var tag = require('./routes/tag')
+var user = require('./routes/user');
+var question = require('./routes/question');
+var solution = require('./routes/solution');
+var tag = require('./routes/tag');
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
@@ -21,7 +21,7 @@ ejs.close = '}}';
 
 // Database
 var Neo4jMapper = require('neo4jmapper');
-var neo4j = new Neo4jMapper('http://54.72.160.154:7474/');
+var neo4j = new Neo4jMapper('http://localhost:7474/');
 
 user = new user.UserModule(neo4j);
 question = new question.QuestionModule(neo4j, fs);
@@ -64,13 +64,14 @@ app.get('/', routes.index);
 app.use(express.static(path.join(__dirname, './uploads')));
 
 // ----------------------------------------Methods To implements.--------------------------------------------
-app.post('/AddUser', user.AddUser); // return ture if success else false   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
-app.post('/LogIn', user.LogIn); // return ture if success else false       | {"email":"asdasdasdasd","password":"123123"}
-app.post('/SetTagToUser', tag.SetTagToUser); //                            | {"tagName":"KingTad","userId":"2a207069-1776-995f-5bf1-f77cbf5624c3"}
-app.post('/SetTagToQuestion', tag.SetTagToQuestion); //                    | {"tagName":"KingTad","questionId":"e79ccbbf-e8a8-f118-9afc-f5a37d728a14"}
+app.post('/AddUser', user.AddUser); // return {IsSuccess: bool, UserID: Guid }   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
+app.post('/LogIn', user.LogIn); // return {IsSuccess: bool, UserID: Guid }       | {"email":"asdasdasdasd","password":"123123"}
+app.post('/SetTagToUser', tag.SetTagToUser); //    return {IsSuccess: bool}      | {"tagName":"KingTad","userId":"2a207069-1776-995f-5bf1-f77cbf5624c3"}
+app.post('/SetTagToQuestion', tag.SetTagToQuestion); //                          | {"tagName":"KingTad","questionId":"e79ccbbf-e8a8-f118-9afc-f5a37d728a14"}
 app.get('/GetTagsStartWith/:tagName', tag.GetTagsStartWith);
-app.post('/AskQuestion', question.AskQuestion);     //                     | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
-app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //       | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
+app.get('/GetTagsForUser/:userId', tag.GetTagsForUser);
+app.post('/AskQuestion', question.AskQuestion);     //                           | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
+app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //             | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
 app.get('/GetAllSolutionForQuestion/:questionId', solution.GetAllSolutionForQuestion);
 app.get('/GetQuestions', question.GetQuestions);           //              |
 //app.get('/GetQuestionWithSolutions', user.userlist);
@@ -86,7 +87,6 @@ app.get('/GetQuestions', question.GetQuestions);           //              |
 app.get('/GetUsersList', user.GetUserslist);
 app.delete('/deleteall/', user.deleteall);
 //app.get('/adduser/:username/:password/:email?', user.adduser);
-app.post('/login', user.authenticateUser);
 
 // development only
 if ('development' == app.get('env')) {

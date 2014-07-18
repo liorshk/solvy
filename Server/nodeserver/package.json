@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "node_modules/.bin/mocha -w"
   },
   "dependencies": {
     "express": "~4.0.0",
@@ -13,5 +14,11 @@
     "method-override": "~1.0.0",
     "connect-multiparty": "*",
     "neo4jmapper": "*"
-  }
+  },
+  "devDependencies": {
+   "supertest": "*",
+   "mocha": "*",
+   "neo4jmapper": "*",
+   "should": "*"
+ }
 }

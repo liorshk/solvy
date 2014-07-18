@@ -21,48 +21,32 @@ exports.TagModule = function(db)
     this.SetTagToUser = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
 
-        //var data = JSON.parse(req.body.data);
-        var data = req.body;
+        var data = JSON.parse(req.body.data);
+        //var data = req.body;
         try 
         {
             // Check if the tag exist.
             var users = [];
-            db.Graph
-            .start()
-            .match('(n:Tag)')
-            .where({ 'n.name': data.tagName })
-	        .return('(n)')
-	        .limit(1, function(err, tag){            
-                if (IsErrorOccuer(err, res, 'Failed to search tag')) return;
-                else // Success the operation.
-                {
-                    if (tag == null) // If tag not found, create the tag.
-                    {
-                       tag = new Tag({name: data.tagName, rating: 0});
-                       try {
-                            tag.save(function(err, result) {
-                                if (IsErrorOccuer(err, res, 'Failed to save new tag')) 
-                                    return;
-                            });
-                        } 
-                        catch (err) {
-                            if (IsErrorOccuer(err, res, 'Failed to save new tag')) return;
-                        }
+            db.Graph.query("MATCH (user:User { user_id: '" + data.userId + "' }) MERGE (user)" +
+                                    "-[r:Subscribe]->(tag:Tag { name:'"+ data.tagName +"' }) RETURN r",
+                function (err, relation) {
+                    IsError(err, res, 'Failed to perform query to set tag to user');
+                    if (relation != null && relation.data.length > 0) {
+                        res.json({ IsSuccess: true });
                     }
-
-                    if (!CreateRelationUserTag(data.userId, tag, res)) // If failed  
-                        return ;
-                }
-            })
+                    else {
+                        res.json({ IsSuccess: false });
+                    }
+                });
         }
-        catch (err2)
+        catch (err)
         {
-            if (IsErrorOccuer(err2, res, 'Failed to add tag for user')) return;
+            IsError(err, res, 'Failed to add tag for user');
+            res.json({ IsSuccess: false });
         }
-        res.json({IsSuccess:true});  
     };
 
-    function IsErrorOccuer(err, res, errorMessage)
+    function IsError(err, res, errorMessage)
     {
            if (err)
             {
@@ -73,29 +57,9 @@ exports.TagModule = function(db)
             return false;
     }
 
-    // return true if success.
-    function CreateRelationUserTag(userId, tag, res)
-    {
-        //var x = db.Node.findById(parseInt(userId, 10));
-        db.Graph
-            .start()
-            .match('(n:User)')
-            .where({ 'n.user_id': userId })
-	        .return('(n)')
-	        .limit(1, function(err, user){            
-                if (IsErrorOccuer(err, res, 'Failed to create tag user relation')) return false;
-                else
-                {
-                    user.createRelationTo(tag, 'folowing',function(err, dave){  
-                    if (IsErrorOccuer(err, res, 'Failed to create tag user relation')) return false;
-                    else
-                        return true;});
-                }}
-            );
-    }
 
     /*
-    * POST to SetTagToUser.
+    * POST to SetTagToQuestion.
     */
     this.SetTagToQuestion = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
@@ -112,7 +76,7 @@ exports.TagModule = function(db)
             .where({ 'n.name': data.tagName })
 	        .return('(n)')
 	        .limit(1, function(err, tag){            
-                if (IsErrorOccuer(err, res, 'Failed to search tag')) return;
+	            if (IsError(err, res, 'Failed to search tag')) return;
                 else // Success the operation.
                 {
                     if (tag == null) // If tag not found, create the tag.
@@ -120,12 +84,12 @@ exports.TagModule = function(db)
                        tag = new Tag({name: data.tagName, rating: 0});
                        try {
                             tag.save(function(err, result) {
-                                if (IsErrorOccuer(err, res, 'Failed to save new tag')) 
+                                if (IsError(err, res, 'Failed to save new tag'))
                                     return;
                             });
                         } 
                         catch (err) {
-                            if (IsErrorOccuer(err, res, 'Failed to save new tag')) return;
+                            if (IsError(err, res, 'Failed to save new tag')) return;
                         }
                     }
 
@@ -136,7 +100,7 @@ exports.TagModule = function(db)
         }
         catch (err2)
         {
-            if (IsErrorOccuer(err2, res, 'Failed to add tag for user')) return;
+            if (IsError(err2, res, 'Failed to add tag for user')) return;
         }
         res.json({IsSuccess:true});  
     };
@@ -151,11 +115,11 @@ exports.TagModule = function(db)
             .where({ 'n.question_id': questionId })
 	        .return('(n)')
 	        .limit(1, function(err, question){            
-                if (IsErrorOccuer(err, res, 'Failed to create tag question relation')) return false;
+	            if (IsError(err, res, 'Failed to create tag question relation')) return false;
                 else
                 {
                     question.createRelationTo(tag, 'question_type',function(err, dave){  
-                    if (IsErrorOccuer(err, res, 'Failed to create tag question relation')) return false;
+                        if (IsError(err, res, 'Failed to create tag question relation')) return false;
                     else
                         return true;});
                 }}
@@ -163,7 +127,7 @@ exports.TagModule = function(db)
     }
 
      /*
-     * GET userlist page.
+     * GET GetTagsStartWith
      */		  
     this.GetTagsStartWith = function(req, res) {
         try
@@ -179,29 +143,39 @@ exports.TagModule = function(db)
 		        }
 		        res.json(found);
             });
-
-
-            
-            // db.Graph
-            //.start()
-            //.match('(n:Tag)')
-            //.where({'n.name' : req.params.tagName + "*"})
-	        //.return('(n)')
-	        //.exec(function(err, found){
-		    //    if(found != null)
-		    //    {
-			//        found.forEach(function(entry) {
-			//	        users.push(entry.data);
-			//        });
-		    //    }
-		    //    res.json(found);
-            //});
-        }
+         }
         catch (err) {
 
         }
 	
-      };
+    };
+
+    /*
+    * GET GetTagsForUser
+    */
+    this.GetTagsForUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        var tags = [];
+
+        try {
+            db.Graph
+           .request()
+            .query("MATCH (tag:Tag)<-[S:Subscribe]-(user:User { user_id: '" + req.params.userId + "'}) RETURN tag;", function (err, found) {
+               if (found != null) {
+                   found.data.forEach(function (entry) {
+                       entry.forEach(function (ent) {
+                           tags.push(ent.data.name);
+                       });
+                   });
+               }
+               res.json(tags);
+           });
+        }
+        catch (err) {
+            if (IsError(err, res, 'Failed to get tags for user')) return;
+        }
+
+    };
 
      /*
      * POST to AskQuestion.

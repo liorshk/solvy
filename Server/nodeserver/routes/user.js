@@ -54,35 +54,34 @@ exports.UserModule = function(db)
         res.header('Access-Control-Allow-Origin', "*");
 
         var data = JSON.parse(req.body.data);
-        //var data = req.body;
+
         try 
         { 
-            //db.Node.findOne( { email: req.body.email }, function(err, dave) { 
             var users = [];
             db.Graph
             .start()
             .match('(n:User)')
-            .where({ 'n.email': data.email })
+            .where({ 'n.username': data.username })
 	        .return('(n)')
-	        .limit(1, function(err, dave){            
+	        .limit(1, function(err, resUser){            
             if (err)
             {
                 console.error('Error with user login: ' + err);
-                res.json(false);                
+                res.json({ IsSuccess: false });
                 return ;
             }
             else
             {
-                if (dave != null && dave.data.password == data.password)
+                if (resUser != null && resUser.data.password == data.password)
                 {
                     console.log('User & Password Matched');
-                    res.json(true);
+                    res.json({ IsSuccess: true, UserID: resUser.data.user_id });
                     return ;
                 }
                 else
                 {
                     console.log('User & Password Unmatched');
-                    res.json(false);
+                    res.json({ IsSuccess: false });
                 }
             }
         })
@@ -90,12 +89,12 @@ exports.UserModule = function(db)
         catch (err2)
         {
             console.log('Error with user login: ' + err2);
-            res.json(false);
+            res.json({ IsSuccess: false });
         }
     };
 
 
-         /*
+     /*
      * POST to adduser.
      */
     this.AskQuestion = function(req, res) {		
@@ -108,13 +107,13 @@ exports.UserModule = function(db)
 
         try {
             user.save(function(err, result) {
-                res.json(true);
+                res.json({ IsSuccess: true });
                 });
 
         } catch (err) 
         {
             console.log('Failed to add user: ' + err);
-            res.json(false);
+            res.json({ IsSuccess: false });
         }
 	}
         
@@ -142,34 +141,6 @@ exports.UserModule = function(db)
       };
 
 
-
-    this.authenticateUser = function(req, res){
-            db.Node.findOne( { email: req.body.user }, function(err, dave) {
-                try 
-                {   
-                 if (err)
-                    {
-                        console.error(err.message);                        
-                    }
-                    else
-                    {
-                        if (dave != null && dave.data.password == req.body.password )
-                        {
-                            console.log('User & Password Matched');
-                              res.json(true);
-                        }
-                        else
-                        {
-                            res.json({msg:true});
-                        }
-                    }
-                }
-                catch(err2)
-                {
-                    res.json(err2.msg);
-                }
-            });
-    };
     //--------------------------
 
     /*
