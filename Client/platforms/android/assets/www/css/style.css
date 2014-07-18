@@ -47,9 +47,9 @@ a{
   position: fixed;
   -webkit-transform: scale(1,1);
   left: 50%;
-  top: 50%;
+  top: 35%;
   width: 300px;
-  height: 300px;
+  height: 500px;
   margin-left: -150px;
   margin-top: -150px;
   box-sizing: border-box;
@@ -59,31 +59,40 @@ a{
   -webkit-animation-fill-mode: forwards;
 }
 
+.rotate90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
 .swipe-card .title {
-  height: 40px;
-  padding: 5px;
-  line-height: 30px;
+
   color: #444;
 }
 .swipe-card .image {
   overflow: hidden;
-  max-height: 210px;
+  /*max-height: 210px;*/
 }
 .swipe-card .button {
   border: none;
 }
 .swipe-card .image img {
   width: 100%;
+  height:400px;
   border-radius: 0px 0px 4px 4px;
 }
 
 #start-card {
-  color: #fff;
-  background-color: #30BD8A;
-  line-height: 300px;
+  color: #fff;  
+  height: 400px;
   word-wrap: break-word;
-  border: 6px solid #4CD68E;
   text-align: center;
+background: -webkit-linear-gradient(#81a5ee, #bccff6); /* For Safari 5.1 to 6.0 */
+background: -o-linear-gradient(#81a5ee, #bccff6); /* For Opera 11.1 to 12.0 */
+background: -moz-linear-gradient(#81a5ee, #bccff6); /* For Firefox 3.6 to 15 */
+background: linear-gradient(#81a5ee, #bccff6); /* Standard syntax */
 }
 #start-card span {
   display: inline-block;
@@ -131,7 +140,7 @@ left:20px;
     background-image:url("../img/qaa.jpg");
     background-size:contain;
     background-repeat:no-repeat;
-    width:100px;
+    width:120px;
     height:120px;
     position:relative;
     opacity:.8;
@@ -185,7 +194,7 @@ left:220px;
     background-image:url("../img/ua.jpg");
     background-size:contain;
     background-repeat:no-repeat;
-    width:100px;
+    width:120px;
     height:120px;
     position:relative;
     animation:boxes2 5s;
@@ -230,7 +239,7 @@ left:220px;
 
 .blockPosition3{
 position:fixed;
-top:160px;
+top:80px;
 left:120px;
 }
 
@@ -239,7 +248,7 @@ left:120px;
     background-image:url("../img/camera_icon_1.jpeg");
     background-size:contain;
     background-repeat:no-repeat;
-    width:100px;
+    width:120px;
     height:120px;
     position:relative;
     z-index:-999;
@@ -278,4 +287,12 @@ left:120px;
 0%   {right:100px; top:0px;}
 
 100% {right:0px; top:0px;}
+}
+
+.gradientbackground
+{
+    background: -webkit-linear-gradient(blue, white); /* For Safari 5.1 to 6.0 */
+background: -o-linear-gradient(blue, white); /* For Opera 11.1 to 12.0 */
+background: -moz-linear-gradient(blue, white); /* For Firefox 3.6 to 15 */
+background: linear-gradient(blue, white); /* Standard syntax */
 }

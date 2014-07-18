@@ -6,7 +6,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('starter', ['ionic', 'ionic.contrib.ui.cards','starter.services', 'starter.controllers'])
+angular.module('starter', ['ionic','starter.services', 'starter.controllers','starter.directives'])
 	 .run(function ($ionicPlatform) {
 	     $ionicPlatform.ready(function () {
 	         if (window.StatusBar) {
@@ -39,26 +39,26 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.cards','starter.services',
               url: "/forgotpassword",
               templateUrl: "templates/login/forgotpassword.html"
           })
-          .state('tabs', {
-              url: "/tab",
-              abstract: true,
-              templateUrl: "templates/home/tabs.html"
-          })
-          .state('tabs.home', {
-              url: "/home",
-              views: {
-                  'home-tab': {
-                      templateUrl: "templates/home/home.html",
-                      controller: 'HomeTabCtrl'
-                  }
-              }
-          })
-            // Ask Question
-          .state('askquestion', {
-              url: "/askquestion",
-              templateUrl: "templates/questions/askquestion.html",
-              controller: 'AskQuestionCtrl'
-          })
+         .state('app', {
+            url: "/app",
+            abstract: true,
+            templateUrl: "templates/tabs.html"
+         })
+            .state('app.home', {
+                url: "/home",
+                views: {
+                    'home': {
+                        templateUrl: "templates/viewquestions.html",
+                        controller: "ViewQuestionsCtrl"
+                    }
+                }
+            })
+        // Ask Question
+        .state('askquestion', {
+            url: "/askquestion",
+            templateUrl: "templates/questions/askquestion.html",
+            controller: 'AskQuestionCtrl'
+        })
 
 	    // Ask Question
 	    .state('hotquestions', {
@@ -71,6 +71,12 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.cards','starter.services',
 	        url: "/addanswer",
 	        templateUrl: "templates/questions/addanswer.html",
 	        controller: 'AddAnswerCtrl'
+	    })
+        // Answers
+	    .state('answers', {
+	        url: "/answers",
+	        templateUrl: "templates/questions/answers.html",
+	        controller: 'AnswersCtrl'
 	    });
 
 	    $urlRouterProvider.otherwise("/login");

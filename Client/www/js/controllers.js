@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['ngTagsInput'])
+﻿angular.module('starter.controllers', [])
 
 	.controller('LoginCtrl', function ($scope, $state, UserService) {
 
@@ -28,8 +28,15 @@ angular.module('starter.controllers', ['ngTagsInput'])
 
 	})
 
-	.controller('HomeTabCtrl', function ($scope, $state) {
-	    console.log('HomeTabCtrl');
+	.controller('ViewQuestionsCtrl', function ($scope, $state, $ionicSideMenuDelegate) {
+	    console.log('ViewQuestionsCtrl');
+	    var mySwiper = new Swiper('.swiper-container', {
+	        mode: 'vertical'
+
+	    })
+	    $scope.showMenu = function () {
+	        $ionicSideMenuDelegate.toggleLeft();
+	    };
 	    //$("#app").draggable();
 	    $scope.askquestion = function () {
 	        $state.go('askquestion');
@@ -39,6 +46,15 @@ angular.module('starter.controllers', ['ngTagsInput'])
 	        $state.go('hotquestions');
 	    }
 	})
+
+    .controller('TagsCtrl', function ($scope, $state, TagsService, UserService) {
+        console.log('TagsCtrl');
+
+        var curUserId = UserService.getCurrentUser().UserID;
+
+        // Load Tags
+        TagsService.getTagsForUser(curUserId);
+    })
 
 	.controller('AskQuestionCtrl', function ($scope, $state, QuestionService, UserService) {
 
@@ -80,7 +96,7 @@ angular.module('starter.controllers', ['ngTagsInput'])
 	    };
 	})
 
-    .controller('AskAnswerCtrl', function ($scope, $state, QuestionService, UserService) {
+    .controller('AddAnswerCtrl', function ($scope, $state, QuestionService, UserService) {
 
         $scope.showIt = false;
 
@@ -110,7 +126,7 @@ angular.module('starter.controllers', ['ngTagsInput'])
         $scope.submit = function () {
             QuestionService.setComment($scope.comment);
             QuestionService.setTags($scope.tags);
-            QuestionService.askQuestion();
+            QuestionService.addAnswer();
         }
 
         $scope.tags = [];
@@ -120,11 +136,21 @@ angular.module('starter.controllers', ['ngTagsInput'])
         };
     })
 
-    .controller('HotQuestionsCtrl', function ($scope, $ionicSwipeCardDelegate, QuestionService) {
-        $scope.ip = "192.168.56.1";
+    .controller('HotQuestionsCtrl', function ($scope,$state, $ionicSwipeCardDelegate, QuestionService) {
+        $scope.ip = "54.72.160.154";
 
         QuestionService.getQuestions();
         $scope.questionslides = [];
+
+        $scope.answer = function (qid) {
+            QuestionService.setCurrentQid(qid);
+            $state.go('addanswer');
+        }
+
+        $scope.seeAnswers = function (qid) {
+            QuestionService.setCurrentQid(qid);
+            $state.go('answers');
+        }       
 
         $scope.cardSwiped = function (index) {
             $scope.addCard();
@@ -144,4 +170,32 @@ angular.module('starter.controllers', ['ngTagsInput'])
             var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
             card.swipe();
         };
-    });
+    })
+ .controller('AnswersCtrl', function ($scope, $ionicSwipeCardDelegate, QuestionService) {
+     $scope.ip = "54.72.160.154";
+     QuestionService.getAnswersForQuestion();
+     $scope.answersslide = [];
+     
+     $scope.cardSwiped = function (index) {
+         $scope.addCard();
+     };
+
+     $scope.cardDestroyed = function (index) {
+         $scope.answersslide.splice(index, 1);
+     };
+
+     $scope.addCard = function () {
+         if ($scope.answers != undefined)
+         {
+             var newCard = $scope.answers[Math.floor(Math.random() * $scope.answers.length)];
+             newCard.id = Math.random();
+             $scope.answersslide.push(angular.extend({}, newCard));
+         }
+         
+     }
+
+     $scope.goAway = function () {
+         var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+         card.swipe();
+     };
+ });
