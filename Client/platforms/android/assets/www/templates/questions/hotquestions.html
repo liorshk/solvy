@@ -1,0 +1,37 @@
+﻿<div class="bar bar-header bar-dark">
+    <b>Solvy - שיתוף שאלות באמצעות תמונות ותגיות</b>
+</div>
+<ion-pane>
+    <swipe-cards on-swipe="onSwipe($event)">
+
+        <swipe-cards>
+            <swipe-card on-swipe="cardSwiped()" id="start-card" class="ion-chevron-down">
+                החלק למטה כדי לראות שאלות נוספות
+                <i class="ion-chevron-down"></i>
+            </swipe-card>
+            <swipe-card ng-repeat="question in questionslides" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
+                <div>
+                    <div class="item item-avatar">
+                        <img src="./img/student-clipart-3.png">
+                        <h2><b>{{question.username}}</b></h2> 
+                        <h2>{{question.university}}</h2>
+                    </div>
+                    <div class="image">
+                        <img class="rotate90" src="http://{{ip}}/{{question.imagePath.substr(question.imagePath.lastIndexOf('/') + 1)}}">
+                        {{question.comment}}
+                    </div>
+                    <div class="tabs">
+                        <a class="tab-item" ng-click="seeAnswers('{{question.question_id}}')">
+                            <i class="icon ion-android-mail"> תשובות</i>
+                            
+                        </a>
+                        <a class="tab-item" ng-click="answer('{{question.question_id}}')">
+                            <i class="icon ion-chatbox"> ענה</i>
+                            
+                        </a>
+                    </div>
+                </div>
+            </swipe-card>
+        </swipe-cards>
+    </swipe-cards>
+</ion-pane>

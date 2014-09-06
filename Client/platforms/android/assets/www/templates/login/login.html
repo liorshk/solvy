@@ -1,24 +1,24 @@
 <ion-view>
-<ion-content>    
-    <div class="list">
-        <div class="imgbackground">
+    <ion-content style="direction:rtl">
+        <div class="list">
+            <div class="imgbackground">
+            </div>
+            <label class="item item-input" style="margin-top:20px">
+                <span class="input-label">שם משתמש</span>
+                <input type="text" ng-model="user.username">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">סיסמה</span>
+                <input type="password" ng-model="user.password">
+            </label>
         </div>
-        <label class="item item-input">
-            <span class="input-label">שם משתמש</span>
-            <input type="text" ng-model="user.username">
-        </label>
-        <label class="item item-input">
-            <span class="input-label">סיסמה</span>
-            <input type="password" ng-model="user.password">
-        </label>
-    </div>
-    <div class="padding">
-        <button class="button button-block button-positive" ng-click="login(user)">
-            הכנס
-        </button>
-        <a class="button button-block button-balanced" href="#/signup">
-            הרשם
-        </a>
-    </div>
-</ion-content>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="login(user)">
+                הכנס
+            </button>
+            <a class="button button-block button-balanced" href="#/signup">
+                הרשם
+            </a>
+        </div>
+    </ion-content>
 </ion-view>

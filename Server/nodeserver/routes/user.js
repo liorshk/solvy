@@ -1,6 +1,6 @@
-
-exports.UserModule = function(db)
+exports.UserModule = function(db, utils)
 {
+
     var User = db.Node.registerModel( 'User', { 
 		fields: {
 			indexes: {
@@ -13,7 +13,7 @@ exports.UserModule = function(db)
 			}
                             , 
             user_id: function()  {
-                	return guid();
+                	return utils.guid();
 			}
 		}
 		}
@@ -22,6 +22,7 @@ exports.UserModule = function(db)
 
      /*
      * POST to adduser.
+      * Adds the user data only
      */
     this.AddUser = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
@@ -31,21 +32,62 @@ exports.UserModule = function(db)
 		{
 		    //data = req.body;
             data = JSON.parse(req.body.data);
-		}
-		var user = new User(data);
+        }
+        var dbData = { username: data.username, password: data.password, email: data.email };
+		var user = new User(dbData);
 
         try {
-            user.save(function(err, result) {
-                res.send({IsSuccess:true, UserID:result.data.user_id});
-                console.log('Success to add user');
-                });
+            user.save(function (err, result) {
+                if (!err) {
+                    res.send({ IsSuccess: true, UserID: result.data.user_id });
+                    
+                    console.log('Success to add user');
+                }
+                else {
+                    console.log('Failed to add user: ' + err);
+                    res.json({ IsSuccess: false, Error: 'Failed to register user' });
+                }
+            });
 
         } catch (err) 
         {
             console.log('Failed to add user: ' + err);
             res.json({IsSuccess:false, Error:'Failed to register user'});
         }
-	}
+    }
+    
+    /*
+     * POST to DeleteUser.
+     */
+    this.DeleteUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        
+        var data = req.params;
+        if (req.method == "POST") {
+            //data = req.body;
+            data = JSON.parse(req.body.data);
+        }        
+        
+        try {
+            db.Graph
+                .start()
+                .match('(n:User { user_id:"' + data.user_id + '" })')
+	            .delete('(n)')
+	            .exec(function (err, found) {
+                    if (err) {
+                        console.log('Failed to delete user: ' + err);
+                        res.json({ IsSuccess: true });
+                    }
+                    else {
+                        res.json({ IsSuccess: false });
+                    }
+                });
+
+        } catch (err) {
+            console.log('Failed to delete user: ' + err);
+            res.json({ IsSuccess: false});
+        }
+    }
         
     /*
     * POST to LogIn.
@@ -91,37 +133,14 @@ exports.UserModule = function(db)
             console.log('Error with user login: ' + err2);
             res.json({ IsSuccess: false });
         }
-    };
-
-
-     /*
-     * POST to adduser.
-     */
-    this.AskQuestion = function(req, res) {		
-		var data = req.params;
-		if(req.method == "POST")
-		{
-			data = req.body;
-		}
-		var user = new User(data);
-
-        try {
-            user.save(function(err, result) {
-                res.json({ IsSuccess: true });
-                });
-
-        } catch (err) 
-        {
-            console.log('Failed to add user: ' + err);
-            res.json({ IsSuccess: false });
-        }
-	}
-        
+    }
+            
     /*
      * GET userlist page.
      */		  
-    this.GetUserslist = function(req, res) {
-  
+    this.GetUsersList = function(req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+
 	    var users = [];
 	
         db.Graph
@@ -155,13 +174,5 @@ exports.UserModule = function(db)
 	    .exec(function(err, found){res.json('');});
       }
 
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-                   .toString(16)
-                   .substring(1);
-      }
-      return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-             s4() + '-' + s4() + s4() + s4();
-    }
+    
 }

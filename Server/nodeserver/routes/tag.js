@@ -1,157 +1,140 @@
-﻿
-exports.TagModule = function(db)
+﻿exports.TagModule = function(db, utils)
 {
-    var Tag = db.Node.registerModel( 'Tag', { 
-		fields: {
-			indexes: {
-			name: true
-			},
-			defaults: {
-			created_on: function()  {
-				return new Date().getTime();
-			}
-			}
-		}
-		})
+
+    var Relationship_Tag_User = "Subscribe";
+    var Relationship_Tag_Question = "Belongs";
 
 
     /*
-    * POST to SetTagToUser.
+    * POST to UpsertTag.
+     * Input: {name:string, icon:string,type: university/course/topic}
+     * Return:  {IsSuccess: bool,TagID: guid}    
     */
-    this.SetTagToUser = function (req, res) {
+    this.UpsertTag = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
 
         var data = JSON.parse(req.body.data);
+        
+        data.id = utils.guid();
+
+        db.Graph.query("merge (tag:Tag {name: \"" + data.name + "\"}) " +
+                        "set tag = " + utils.cleanQuery(data) + " "+
+                        "return tag", 
+                        function (err, tag) {
+                            utils.isError(err, res, 'Failed to perform query to upsert tag');
+                            if (tag != null && tag.data.length == 1) {
+                                res.json({ IsSuccess: true, TagID: tag.data[0][0].data.id});
+                            }
+                            else {
+                                res.json({ IsSuccess: false });
+                            }
+                        });
+
+    };
+
+    /*
+    * POST to SetTagsToUser.
+     * Input: {"userId":guid,"tags":array of string}
+     * Return:  {IsSuccess: bool}    
+    */
+    this.SetTagsToUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        
+        var data = JSON.parse(req.body.data);
+
+        console.log("UserId: " + data.userId + " Tags: " + data.tags);
+
         //var data = req.body;
-        try 
-        {
-            // Check if the tag exist.
-            var users = [];
-            db.Graph.query("MATCH (user:User { user_id: '" + data.userId + "' }) MERGE (user)" +
-                                    "-[r:Subscribe]->(tag:Tag { name:'"+ data.tagName +"' }) RETURN r",
-                function (err, relation) {
-                    IsError(err, res, 'Failed to perform query to set tag to user');
-                    if (relation != null && relation.data.length > 0) {
-                        res.json({ IsSuccess: true });
-                    }
-                    else {
-                        res.json({ IsSuccess: false });
-                    }
-                });
+        try {
+            for (index in data.tags) {
+                db.Graph.query(utils.getMergeAndRelationshipQuery("User", { user_id: data.userId }, Relationship_Tag_User,"Tag", { name: data.tags[index] }), 
+                    function (err, relation) {
+                        utils.isError(err, res, 'Failed to perform query to set tag to user');
+                        if (relation != null && relation.data.length > 0) {
+                            res.json({ IsSuccess: true });
+                        }
+                        else {
+                            res.json({ IsSuccess: false });
+                        }
+                    });
+            }
         }
         catch (err)
         {
-            IsError(err, res, 'Failed to add tag for user');
+            utils.isError(err, res, 'Failed to add tag for user');
             res.json({ IsSuccess: false });
         }
     };
 
-    function IsError(err, res, errorMessage)
-    {
-           if (err)
-            {
-                console.error(errorMessage + ': ' + err);
-                res.json({IsSuccess:false});           
-                return true;
-            }
-            return false;
-    }
-
-
     /*
-    * POST to SetTagToQuestion.
+    * POST to SetTagsToQuestion.
+     * Input: {"questionId":guid,"tags":array of string}
+     * Return:  {IsSuccess: bool}   
     */
-    this.SetTagToQuestion = function (req, res) {
+    this.SetTagsToQuestion = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
 
-        //var data = JSON.parse(req.body.data);
-        var data = req.body;
-        try 
-        {
-            // Check if the tag exist.
-            var users = [];
-            db.Graph
-            .start()
-            .match('(n:Tag)')
-            .where({ 'n.name': data.tagName })
-	        .return('(n)')
-	        .limit(1, function(err, tag){            
-	            if (IsError(err, res, 'Failed to search tag')) return;
-                else // Success the operation.
-                {
-                    if (tag == null) // If tag not found, create the tag.
-                    {
-                       tag = new Tag({name: data.tagName, rating: 0});
-                       try {
-                            tag.save(function(err, result) {
-                                if (IsError(err, res, 'Failed to save new tag'))
-                                    return;
-                            });
-                        } 
-                        catch (err) {
-                            if (IsError(err, res, 'Failed to save new tag')) return;
-                        }
-                    }
+        var data = JSON.parse(req.body.data);
+        
+        console.log("QuestionId: " + data.questionId + " Tags: " + data.tags);
 
-                    if (!CreateRelationQuestionTag(data.questionId, tag, res)) // If failed  
-                        return ;
-                }
-            })
+        //var data = req.body;
+        try {
+            for (index in data.tags) {
+                db.Graph.query(utils.getMergeAndRelationshipQuery("Question", { question_id: data.questionId }, Relationship_Tag_Question, "Tag" ,{ name: data.tags[index] }),
+                    function (err, relation) {
+                        utils.isError(err, res, 'Failed to perform query to set tag to question');
+                        if (relation != null && relation.data.length > 0) {
+                            res.json({ IsSuccess: true });
+                        }
+                        else {
+                            res.json({ IsSuccess: false });
+                        }
+                    });
+            }
         }
-        catch (err2)
-        {
-            if (IsError(err2, res, 'Failed to add tag for user')) return;
+        catch (err) {
+            utils.isError(err, res, 'Failed to add tag for question');
+            res.json({ IsSuccess: false });
         }
-        res.json({IsSuccess:true});  
     };
 
-    // return true if success.
-    function CreateRelationQuestionTag(questionId, tag, res)
-    {
-        //var x = db.Node.findById(parseInt(questionId, 10));
-        db.Graph
-            .start()
-            .match('(n:Question)')
-            .where({ 'n.question_id': questionId })
-	        .return('(n)')
-	        .limit(1, function(err, question){            
-	            if (IsError(err, res, 'Failed to create tag question relation')) return false;
-                else
-                {
-                    question.createRelationTo(tag, 'question_type',function(err, dave){  
-                        if (IsError(err, res, 'Failed to create tag question relation')) return false;
-                    else
-                        return true;});
-                }}
-            );
-    }
 
      /*
      * GET GetTagsStartWith
+     * Input: {"tagName":string}
+     * Return:  array of string(tags)
      */		  
     this.GetTagsStartWith = function(req, res) {
         try
          {
              db.Graph
             .request()
-            .query("MATCH (t:Tag) MATCH t.name =~ " + req.params.tagName + "*" + "RETURN t;", function(err, found){
-		        if(found != null)
-		        {
-			        found.forEach(function(entry) {
-				        users.push(entry.data);
-			        });
-		        }
-		        res.json(found);
+            .query("MATCH (t:Tag) MATCH t.name =~ " + req.params.tagName + "*" + "RETURN t;", function (err, found){
+                if (!err) {
+                    var tags = [];
+                    if (found != null) {
+                        found.forEach(function (entry) {
+                            tags.push(entry.data);
+                        });
+                    }
+                    res.json(tags);
+                }
+                else {
+                    utils.isError(err, res, 'Failed to perform GetTagsStartWith');
+                }
             });
          }
         catch (err) {
-
+            if (utils.isError(err, res, 'Failed to perform GetTagsStartWith')) return;
         }
 	
     };
 
     /*
     * GET GetTagsForUser
+     * Input: {"userId":guid}
+     * Return:  array of string(tags)
     */
     this.GetTagsForUser = function (req, res) {
         res.header('Access-Control-Allow-Origin', "*");
@@ -160,11 +143,11 @@ exports.TagModule = function(db)
         try {
             db.Graph
            .request()
-            .query("MATCH (tag:Tag)<-[S:Subscribe]-(user:User { user_id: '" + req.params.userId + "'}) RETURN tag;", function (err, found) {
+            .query("MATCH (tag:Tag)<-[S:" + Relationship_Tag_User + "]-(user:User { user_id: '" + req.params.userId + "'}) RETURN tag;", function (err, found) {
                if (found != null) {
                    found.data.forEach(function (entry) {
                        entry.forEach(function (ent) {
-                           tags.push(ent.data.name);
+                           tags.push(ent.data);
                        });
                    });
                }
@@ -172,74 +155,9 @@ exports.TagModule = function(db)
            });
         }
         catch (err) {
-            if (IsError(err, res, 'Failed to get tags for user')) return;
+            if (utils.isError(err, res, 'Failed to get tags for user')) return;
         }
 
     };
-
-     /*
-     * POST to AskQuestion.
-     */
-    //this.SetTagToUser = function(req, res) {		
-	//	var data = req.params;
-	//	if(req.method == "POST")
-	//	{
-	//		data = req.body;
-	//	}
-	//	var tag = new Tag(data);
-
-    //    try {
-    //         db.Node.findOrCreate( {
-    //            name: 'Dave Grohl'
-    //          }, cb );
-
-
-
-    //        user.save(function(err, result) {
-    //            res.json(true);
-    //            });
-
-    //    } catch (err) 
-    //    {
-    //        console.log('Failed to add user: ' + err);
-    //        res.json(false);
-    //    }
-	//}
-        
-    ///*
-    //* POST to LogIn.
-    //*/
-    //this.LogIn = function(req, res) {		
-    //    try 
-    //    { 
-    //        db.Node.findOne( { email: req.body.email }, function(err, dave) {                
-    //        if (err)
-    //        {
-    //            console.error('Error with user login: ' + err);
-    //            res.json(false);                
-    //            return ;
-    //        }
-    //        else
-    //        {
-    //            if (dave != null && dave.data.password == req.body.password)
-    //            {
-    //                console.log('User & Password Matched');
-    //                res.json(true);
-    //                return ;
-    //            }
-    //            else
-    //            {
-    //                console.log('User & Password Unmatched');
-    //                res.json(false);
-    //            }
-    //        }
-    //    })
-    //    }
-    //    catch (err2)
-    //    {
-    //        console.log('Error with user login: ' + err2);
-    //        res.json(false);
-    //    }
-    //};
 
 }

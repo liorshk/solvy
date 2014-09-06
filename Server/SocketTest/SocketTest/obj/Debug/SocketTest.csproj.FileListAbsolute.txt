@@ -1,0 +1,6 @@
+C:\Users\Lior\workspace\Solvy\Server\SocketTest\SocketTest\bin\Debug\SocketTest.exe.config
+C:\Users\Lior\workspace\Solvy\Server\SocketTest\SocketTest\bin\Debug\SocketTest.exe
+C:\Users\Lior\workspace\Solvy\Server\SocketTest\SocketTest\bin\Debug\SocketTest.pdb
+C:\Users\Lior\workspace\Solvy\Server\SocketTest\SocketTest\obj\Debug\SocketTest.csprojResolveAssemblyReference.cache
+C:\Users\Lior\workspace\Solvy\Server\SocketTest\SocketTest\obj\Debug\SocketTest.exe
+C:\Users\Lior\workspace\Solvy\Server\SocketTest\SocketTest\obj\Debug\SocketTest.pdb

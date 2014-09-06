@@ -2,4 +2,4 @@
 
 /* Filters */
 
-angular.module('starter.filters', []);
+angular.module('solvy.filters', []);

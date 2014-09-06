@@ -31,6 +31,7 @@
   <ItemGroup>
     <Compile Include="admin\javascripts\global.js" />
     <Compile Include="app.js" />
+    <Compile Include="components\Utils.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\question.js" />
     <Compile Include="routes\solution.js" />
@@ -46,6 +47,7 @@
     <Folder Include="admin\" />
     <Folder Include="admin\javascripts\" />
     <Folder Include="admin\stylesheets\" />
+    <Folder Include="components\" />
     <Folder Include="test\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />

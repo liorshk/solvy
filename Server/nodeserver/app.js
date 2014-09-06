@@ -12,6 +12,7 @@ var user = require('./routes/user');
 var question = require('./routes/question');
 var solution = require('./routes/solution');
 var tag = require('./routes/tag');
+var utils = require('./components/utils.js');
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
@@ -23,9 +24,9 @@ ejs.close = '}}';
 var Neo4jMapper = require('neo4jmapper');
 var neo4j = new Neo4jMapper('http://localhost:7474/');
 
-user = new user.UserModule(neo4j);
-question = new question.QuestionModule(neo4j, fs);
-tag = new tag.TagModule(neo4j);
+user = new user.UserModule(neo4j, utils);
+question = new question.QuestionModule(neo4j, fs, utils);
+tag = new tag.TagModule(neo4j, utils);
 solution = new solution.SolutionModule(neo4j,fs);
 
 var app = express();
@@ -64,16 +65,22 @@ app.get('/', routes.index);
 app.use(express.static(path.join(__dirname, './uploads')));
 
 // ----------------------------------------Methods To implements.--------------------------------------------
-app.post('/AddUser', user.AddUser); // return {IsSuccess: bool, UserID: Guid }   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123"}
+app.post('/AddUser', user.AddUser); // return {IsSuccess: bool, UserID: Guid }   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123","university":string,"courses":array[string]}
 app.post('/LogIn', user.LogIn); // return {IsSuccess: bool, UserID: Guid }       | {"email":"asdasdasdasd","password":"123123"}
-app.post('/SetTagToUser', tag.SetTagToUser); //    return {IsSuccess: bool}      | {"tagName":"KingTad","userId":"2a207069-1776-995f-5bf1-f77cbf5624c3"}
-app.post('/SetTagToQuestion', tag.SetTagToQuestion); //                          | {"tagName":"KingTad","questionId":"e79ccbbf-e8a8-f118-9afc-f5a37d728a14"}
+app.post('/DeleteUser', user.DeleteUser); // return {IsSuccess: bool }           | {"userId": guid} // TODO -SECURE
+
+app.post('/UpsertTag', tag.UpsertTag); //    return {IsSuccess: bool, TagID: guid}      | {"name":string,"icon":string,"type": "university/course/topic"}
+app.post('/SetTagsToUser', tag.SetTagsToUser); //    return {IsSuccess: bool}      | {"userId":guid,"tags":array of string}
+app.post('/SetTagsToQuestion', tag.SetTagsToQuestion); //                          | {"questionId":guid,"tags":array of string}
 app.get('/GetTagsStartWith/:tagName', tag.GetTagsStartWith);
 app.get('/GetTagsForUser/:userId', tag.GetTagsForUser);
-app.post('/AskQuestion', question.AskQuestion);     //                           | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
-app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //             | {"imagePath":"c:/asd/asd.image","details":"bla bla image"}
-app.get('/GetAllSolutionForQuestion/:questionId', solution.GetAllSolutionForQuestion);
+app.post('/AskQuestion', question.AskQuestion);     // return {IsSuccess: bool, QuestionID: Guid }    | {"file":"c:/asd/asd.image","title": "Title", "details":"bla bla image"}
+app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //  
+app.get('/GetQuestionsForTagAndUser/:tagName/:userId', question.GetQuestionsForTagAndUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid,"tag":string}
+app.get('/GetQuestionsForTag/:tagName', question.GetQuestionsForTag); //  return {IsSuccess: bool, Questions: Array }    | {"tag":string}
+app.get('/GetAllSolutionForQuestion/:questionId', solution.GetAllSolutionForQuestion); // 
 app.get('/GetQuestions', question.GetQuestions);           //              |
+
 //app.get('/GetQuestionWithSolutions', user.userlist);
 //app.get('/GetUserDetails', user.userlist);
 //app.post('/EditDetails', user.userlist);
@@ -84,7 +91,7 @@ app.get('/GetQuestions', question.GetQuestions);           //              |
 
 
 // ----------------------------------------Methods For Debug.--------------------------------------------
-app.get('/GetUsersList', user.GetUserslist);
+app.get('/GetUsersList', user.GetUsersList);
 app.delete('/deleteall/', user.deleteall);
 //app.get('/adduser/:username/:password/:email?', user.adduser);
 
