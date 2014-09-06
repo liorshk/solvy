@@ -1,6 +1,6 @@
 {
-  "name": "apiserver",
-  "version": "0.0.1",
+  "name": "solvyserver",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node app.js",

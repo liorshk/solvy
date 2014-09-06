@@ -1,118 +1,178 @@
+exports.UserModule = function(db, utils)
+{
 
-/*
- * GET userlist page.
- */		  
-exports.userlist = function(db) {
-  return function(req, res) {
-  
-	var users = [];
-	
-    db.Graph
-    .start()
-    .match('(n:User)')
-	.return('(n)')
-	.exec(function(err, found){
-		if(found != null)
-		{
-			found.forEach(function(entry) {
-				users.push(entry.data);
-			});
-		}
-		res.json(users);
-    });
-	
-  }
-};
-
-/*
- * POST to adduser.
- */
-
-exports.adduser = function(db) {
-  return function(req, res) {
-		var User = db.Node.registerModel( 'User', { 
-			fields: {
-			  indexes: {
-				email: true
-			  },
-			  defaults: {
-				created_on: function() {
-				  return new Date().getTime();
-				}
-			  }
+    var User = db.Node.registerModel( 'User', { 
+		fields: {
+			indexes: {
+            user_id: true,
+			email: true
+			},
+			defaults: {
+			created_on: function()  {
+				return new Date().getTime();
 			}
-		  });
-		
+                            , 
+            user_id: function()  {
+                	return utils.guid();
+			}
+		}
+		}
+		})
+
+
+     /*
+     * POST to adduser.
+      * Adds the user data only
+     */
+    this.AddUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+
 		var data = req.params;
 		if(req.method == "POST")
 		{
-			data = req.body;
-		}
-		var user = new User(data);
+		    //data = req.body;
+            data = JSON.parse(req.body.data);
+        }
+        var dbData = { username: data.username, password: data.password, email: data.email };
+		var user = new User(dbData);
 
-		user.save(function(err, result) {
+        try {
+            user.save(function (err, result) {
+                if (!err) {
+                    res.send({ IsSuccess: true, UserID: result.data.user_id });
+                    
+                    console.log('Success to add user');
+                }
+                else {
+                    console.log('Failed to add user: ' + err);
+                    res.json({ IsSuccess: false, Error: 'Failed to register user' });
+                }
+            });
 
-                res.json('');
-                
+        } catch (err) 
+        {
+            console.log('Failed to add user: ' + err);
+            res.json({IsSuccess:false, Error:'Failed to register user'});
+        }
+    }
+    
+    /*
+     * POST to DeleteUser.
+     */
+    this.DeleteUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        
+        var data = req.params;
+        if (req.method == "POST") {
+            //data = req.body;
+            data = JSON.parse(req.body.data);
+        }        
+        
+        try {
+            db.Graph
+                .start()
+                .match('(n:User { user_id:"' + data.user_id + '" })')
+	            .delete('(n)')
+	            .exec(function (err, found) {
+                    if (err) {
+                        console.log('Failed to delete user: ' + err);
+                        res.json({ IsSuccess: true });
+                    }
+                    else {
+                        res.json({ IsSuccess: false });
+                    }
                 });
 
-	}
-};
+        } catch (err) {
+            console.log('Failed to delete user: ' + err);
+            res.json({ IsSuccess: false});
+        }
+    }
+        
+    /*
+    * POST to LogIn.
+    */
+    this.LogIn = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
 
-//------------------
-exports.authenticateUser = function(db) {
-	return function(req, res){
-        db.Node.findOne( { email: req.body.email}, function(err, dave) {
-            try 
-            {   
-             if (err)
+        var data = JSON.parse(req.body.data);
+
+        try 
+        { 
+            var users = [];
+            db.Graph
+            .start()
+            .match('(n:User)')
+            .where({ 'n.username': data.username })
+	        .return('(n)')
+	        .limit(1, function(err, resUser){            
+            if (err)
+            {
+                console.error('Error with user login: ' + err);
+                res.json({ IsSuccess: false });
+                return ;
+            }
+            else
+            {
+                if (resUser != null && resUser.data.password == data.password)
                 {
-                    console.error(err.message);
-                    return err;
+                    console.log('User & Password Matched');
+                    res.json({ IsSuccess: true, UserID: resUser.data.user_id });
+                    return ;
                 }
                 else
                 {
-                    if (dave != null && dave.data.password == req.body.password )
-                    {
-                        console.log('User & Password Matched');
-                          res.json(true);
-                    }
-                    else
-                    {
-                        var response;
-                        response.message = "try again";
-                        res.json(false);
-                    }
+                    console.log('User & Password Unmatched');
+                    res.json({ IsSuccess: false });
                 }
             }
-            catch(err)
-            {
-                res.json(err);
-            }
+        })
+        }
+        catch (err2)
+        {
+            console.log('Error with user login: ' + err2);
+            res.json({ IsSuccess: false });
+        }
+    }
+            
+    /*
+     * GET userlist page.
+     */		  
+    this.GetUsersList = function(req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+
+	    var users = [];
+	
+        db.Graph
+        .start()
+        .match('(n:User)')
+	    .return('(n)')
+	    .exec(function(err, found){
+		    if(found != null)
+		    {
+			    found.forEach(function(entry) {
+				    users.push(entry.data);
+			    });
+		    }
+		    res.json(users);
         });
+	
+      };
+
+
+    //--------------------------
+
+    /*
+     * DELETE all.
+     */
+
+    this.deleteall = function(req, res) {
+        db.Graph
+        .start()
+        .match('(n:User)')
+	    .delete('(n)')
+	    .exec(function(err, found){res.json('');});
+      }
+
+    
 }
-};
-//--------------------------
-
-/*
- * DELETE all.
- */
-
-exports.deleteall = function(db) {
-  return function(req, res) {
-    db.Graph
-    .start()
-    .match('(n:User)')
-	.delete('(n)')
-	.exec(function(err, found){res.json('');});
-  }
-};
-
-
-var x;
-if (true)
-    x.blabla = true;
-else
-    x = 5;
-
-return x;
