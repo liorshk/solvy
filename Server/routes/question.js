@@ -69,17 +69,18 @@
         var file = req.files.file,
             filePath = file.path;
         // TODO - change the ip
-        var os = require('os');
-        var ifaces = os.networkInterfaces();
-        var address;
-        for (var dev in ifaces) {
-            var alias = 0;
-            ifaces[dev].forEach(function (details) {
-                if (details.family == 'IPv4' && details.address != "127.0.0.1") {
-                    address = details.address;
-                }
-            });
-        }
+        //var os = require('os');
+        //var ifaces = os.networkInterfaces();
+        //var address;
+        //for (var dev in ifaces) {
+        //    var alias = 0;
+        //    ifaces[dev].forEach(function (details) {
+        //        if (details.family == 'IPv4' && details.address != "127.0.0.1") {
+        //            address = details.address;
+        //        }
+        //    });
+        //}
+        var address = "54.72.160.154";
 
         var address = "http://" + address + "/";
         var imageName = utils.guid() + ".jpg";
