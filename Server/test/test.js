@@ -36,7 +36,7 @@ describe('Routing', function () {
             it('Adding Jerusalem University', function (done) {
                 request(url)
                 .post('/UpsertTag')
-                .send("data=" + JSON.stringify({ name: "האוניברסיטה העברית", icon: "img/university_logos/hebrew_university_logo.jpg", type: "university" }))
+                .send({ data: JSON.stringify({ name: "האוניברסיטה העברית", icon: "img/university_logos/hebrew_university_logo.jpg", type: "university" }) })
                 .expect('Content-Type', /json/)
                 .expect(200)//Status code
                 .end(function (err, res) {
@@ -260,7 +260,7 @@ describe('Routing', function () {
             it('Set Tags To User', function (done) {
                 request(url)
                        .post('/SetTagsToUser')
-                       .send("data=" + JSON.stringify({ userId: UserId, tags: ["אוניברסיטת תל אביב","חדוא"] }))
+                       .send({ data: JSON.stringify({ userId: UserId, tags: ["אוניברסיטת תל אביב","חדוא"] }) })
                        .expect('Content-Type', /json/)
                        .expect(200) //Status code
                        .end(function (err, res) {
@@ -306,7 +306,7 @@ describe('Routing', function () {
 
                             request(url)
                                     .post('/SetTagsToQuestion')
-                                    .send("data=" + JSON.stringify({ questionId: res.body.QuestionID, tags: ["חדוא"] }))
+                                    .send({ data: JSON.stringify({ questionId: res.body.QuestionID, tags: ["חדוא"] }) })
                                     .expect(200)//Status code
                                     .end(function (err, res) {
                                 if (err) {
