@@ -32,13 +32,15 @@
   <ItemGroup>
     <Compile Include="admin\javascripts\global.js" />
     <Compile Include="app.js" />
-    <Compile Include="components\Utils.js" />
+    <Compile Include="components\utils.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\question.js" />
     <Compile Include="routes\solution.js" />
     <Compile Include="routes\tag.js" />
     <Compile Include="routes\user.js" />
-    <Compile Include="test\test.js" />
+    <Compile Include="test\test.js">
+      <TestFramework>Mocha</TestFramework>
+    </Compile>
     <Content Include="admin\stylesheets\style.css" />
     <Content Include="package.json" />
     <Content Include="README.md" />
