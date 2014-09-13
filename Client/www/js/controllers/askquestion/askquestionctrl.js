@@ -20,7 +20,7 @@ controllers.controller('AskQuestionCtrl', function ($scope, $state, QuestionServ
     };
 
     // Mimic
-    onSuccess("templates/sampleImg.jpg");
+    //onSuccess("templates/sampleImg.jpg");
 
     var onFail = function (e) {
         console.log("On fail " + e);
@@ -43,7 +43,7 @@ controllers.controller('AskQuestionCtrl', function ($scope, $state, QuestionServ
     $scope.mytags = [];
 
     // On Start
-    //$scope.takePic();
+    $scope.takePic();
 
     function loadTags(){
         var curUserId = UserService.getCurrentUser().UserID;

@@ -21,6 +21,21 @@
             });
 
         },
+        setFavorite: function (qid) {
+            return $http({
+                url: "http://" + IP + "/SetQuestionFavorite",
+                method: "POST",
+                data: "data=" + JSON.stringify({ questionId: qid, userId: UserService.getCurrentUser().UserID }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+                .success(function (data, status, headers, config) {
+                    return angular.fromJson(data);
+                })
+                .error(function (data, status, headers, config) { // optional
+                    // failed
+                })
+
+        },
         askQuestion: function (callbackSuccess, callbackError) {
             var options = new FileUploadOptions();
             options.fileKey = "file";
@@ -81,6 +96,19 @@
         getQuestionsForTagAndUser: function (tagName, userId) {
             return $http({
                 url: "http://" + IP + "/GetQuestionsForTagAndUser/" + tagName + "/" + userId,
+                method: "GET",
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .success(function (data, status, headers, config) {
+                return angular.fromJson(data);
+            })
+            .error(function (data, status, headers, config) { // optional
+                // failed
+            })
+        },
+        getFavoriteQuestionsForUser: function (userId) {
+            return $http({
+                url: "http://" + IP + "/GetFavoriteQuestionsForUser/" + userId,
                 method: "GET",
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })

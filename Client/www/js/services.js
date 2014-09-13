@@ -1,8 +1,8 @@
 /// <reference path="services.js" />
 /// <reference path="services.js" />
 var services = angular.module('solvy.services', [])
-     //.constant("IP", "54.72.160.154")
-    .constant("IP", "localhost")
+     .constant("IP", "54.72.160.154")
+    //.constant("IP", "localhost")
      .service("Utils", function ($q, $http) {
 
          this.uploadToS3 = function (imageURI, fileName) {
