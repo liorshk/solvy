@@ -76,6 +76,8 @@ app.get('/GetTagsStartWith/:tagName', tag.GetTagsStartWith);
 app.get('/GetTagsForUser/:userId', tag.GetTagsForUser);
 app.post('/AskQuestion', question.AskQuestion);     // return {IsSuccess: bool, QuestionID: Guid }    | {"file":"c:/asd/asd.image","title": "Title", "details":"bla bla image"}
 app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //  
+app.post('/SetQuestionFavorite', question.SetQuestionFavorite);   // return {IsSuccess: bool}    | Input: {questionId: guid, userId:guid}
+app.get('/GetFavoriteQuestionsForUser/:userId', question.GetFavoriteQuestionsForUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid}
 app.get('/GetQuestionsForTagAndUser/:tagName/:userId', question.GetQuestionsForTagAndUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid,"tag":string}
 app.get('/GetQuestionsForTag/:tagName', question.GetQuestionsForTag); //  return {IsSuccess: bool, Questions: Array }    | {"tag":string}
 app.get('/GetAllSolutionForQuestion/:questionId', solution.GetAllSolutionForQuestion); // 

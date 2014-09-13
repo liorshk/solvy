@@ -32,7 +32,7 @@
             this.maxWidth = window.innerWidth - (opts.cardGutterWidth || 0);
             this.maxHeight = opts.height || 300;
             this.cardGutterWidth = opts.cardGutterWidth || 10;
-            this.cardPopInDuration = opts.cardPopInDuration || 400;
+            this.cardPopInDuration = opts.cardPopInDuration || 300;
             this.cardAnimation = opts.cardAnimation || 'pop-in';
         },
         /**

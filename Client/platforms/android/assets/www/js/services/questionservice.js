@@ -17,7 +17,7 @@
         setTags: function (tags) {
             question.tags = [];
             tags.forEach(function (tag) {
-                question.tags.push(tag);
+                question.tags.push(tag.name);
             });
 
         },
@@ -37,7 +37,7 @@
             var ft = new FileTransfer();
             ft.upload(question.imageuri, "http://" + IP + "/AskQuestion",
                 function (res) {
-                    var response = angular.fromJson(res.response);
+                    var response = angular.fromJson(res.response);   
 
                     $http({
                         url: "http://" + IP + "/SetTagsToQuestion",

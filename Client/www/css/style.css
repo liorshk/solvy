@@ -28,6 +28,11 @@
   border-radius: 4px;
   overflow: hidden;
   -webkit-animation-fill-mode: forwards;
+  -webkit-animation-duration: 2s;
+-webkit-animation-delay: 1s;
+animation-fill-mode: forwards;
+animation-duration: 2s;
+    animation-delay: 1s;
 
 }
 

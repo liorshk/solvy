@@ -3,12 +3,18 @@ controllers.controller('ViewQuestionsCtrl', function ($scope, $rootScope, $ionic
     console.log('ViewQuestionsCtrl');
     $scope.questions = [];
     $scope.selectedTag = null;
+    $scope.questionCards =[];
 
     function loadQuestionsForTag(tag) {
         QuestionService.getQuestionsForTag(tag.name).
                                    success(function (data) {
                                        if (data.IsSuccess) {
+
+                                           // TODO - unique concat
                                            $scope.questions = $scope.questions.concat(data.Questions);
+
+                                           $scope.curIndex = 0;
+                                           $scope.updateCurrentQuestion();
                                        }
                                    });
     }
@@ -54,5 +60,22 @@ controllers.controller('ViewQuestionsCtrl', function ($scope, $rootScope, $ionic
         $scope.modal.remove();
     });
 
+    $scope.cardSwiped = function(index) {
+        $scope.curIndex++;
+
+        $scope.updateCurrentQuestion();
         
+    };
+
+    $scope.cardDestroyed = function (index) {
+    };
+
+
+    $scope.updateCurrentQuestion = function() {
+        $scope.questionCards[0] = $scope.questions[$scope.curIndex];
+        if ($scope.questionCards[0] == undefined) {
+            $scope.questionCards = [];
+        }
+    }
+    
 })

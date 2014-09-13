@@ -2,7 +2,8 @@
 {
     var Relationship_Question_User = "Ask";    
     var Relationship_Tag_User = "Subscribe";
-    var Relationship_Tag_Question = "Belongs";
+    var Relationship_Tag_Question = "Belongs";    
+    var Relationship_Favorite_Question_User = "Favorite";
 
     var Question = db.Node.registerModel('Question', { 
 		fields: {
@@ -93,6 +94,41 @@
     }
 
     /*
+     * POST to SetQuestionFavorite.
+     * Input: {questionId:guid, userId:guid}
+     * Return:  {IsSuccess: bool}    
+     */
+    this.SetQuestionFavorite = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        var data = req.params;
+        if (req.method == "POST") {
+            data = req.body;
+        }
+        if (data.data != undefined) {
+            data = JSON.parse(data.data);
+        }
+        db.Graph
+            .query(
+                "match (q:Question) match (u:User) where q.question_id = '"+data.questionId+"'"+
+                                                        "AND u.user_id='" + data.userId + "' merge (u-[f:"+ Relationship_Favorite_Question_User+"]->q) return f", 
+                function (err, result) {
+            
+                    var questions = [];
+            
+                    if (result != null) {
+                
+                        res.json({ IsSuccess: true });
+                
+                        console.log('Success to make question "' + data.questionId + 'favorited by user ' + data.userId);
+                    }
+                    else {
+                        res.json({ IsSuccess: false });
+                    }
+            });
+    }
+    
+
+    /*
      * GET questions for a user and a tag
      */		  
     this.GetQuestionsForTagAndUser = function (req, res) {
@@ -106,7 +142,7 @@
         db.Graph
         .query(
         "match (user:User)-[a:" + Relationship_Question_User + "]->(q:Question)-[b:" + Relationship_Tag_Question + "]->(tag:Tag)" +
-        "where user.user_id = '" + data.userId + "' AND tag.name = '" + data.tagName + "' return q ", 
+        " where user.user_id = '" + data.userId + "' AND tag.name = '" + data.tagName + "' return q ", 
             function (err, result) {
             
             var questions = [];
@@ -140,7 +176,7 @@
         db.Graph
         .query(
         "match (q:Question)-[b:" + Relationship_Tag_Question + "]->(tag:Tag)" +
-        "where tag.name = '" + data.tagName + "' return q ", 
+        " where tag.name = '" + data.tagName + "' return q ", 
             function (err, result) {
             
             if (err != null) {
@@ -167,6 +203,39 @@
 
 	
     };
+    
+    /*
+     * GET favorite questions for a user
+     */		  
+    this.GetFavoriteQuestionsForUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        
+        var data = req.params;
+        if (req.method == "POST") {
+            data = req.body;
+        }
+        
+        db.Graph
+        .query(
+        "match (user:User)-[a:" + Relationship_Favorite_Question_User + "]->(q:Question)" +
+        "where user.user_id = '" + data.userId + "' return q ", 
+            function (err, result) {
+            
+            var questions = [];
+            
+            if (result != null) {
+                result.data.forEach(function (entry) {
+                    entry.forEach(function (ent) {
+                        questions.push(ent.data);
+                    });
+                });
+                
+                res.json({ IsSuccess: true, Questions: questions });
+                
+                console.log('Success to retrieve questions for user and tag');
+            }
+        });
+    }
          
     /*
      * GET questions list.

@@ -17,8 +17,23 @@
         setTags: function (tags) {
             question.tags = [];
             tags.forEach(function (tag) {
-                question.tags.push(tag);
+                question.tags.push(tag.name);
             });
+
+        },
+        setFavorite: function (qid) {
+            return $http({
+                url: "http://" + IP + "/SetQuestionFavorite",
+                method: "POST",
+                data: "data=" + JSON.stringify({ questionId: qid, userId: UserService.getCurrentUser().UserID }),
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+                .success(function (data, status, headers, config) {
+                    return angular.fromJson(data);
+                })
+                .error(function (data, status, headers, config) { // optional
+                    // failed
+                })
 
         },
         askQuestion: function (callbackSuccess, callbackError) {
@@ -37,7 +52,7 @@
             var ft = new FileTransfer();
             ft.upload(question.imageuri, "http://" + IP + "/AskQuestion",
                 function (res) {
-                    var response = angular.fromJson(res.response);
+                    var response = angular.fromJson(res.response);   
 
                     $http({
                         url: "http://" + IP + "/SetTagsToQuestion",
@@ -81,6 +96,19 @@
         getQuestionsForTagAndUser: function (tagName, userId) {
             return $http({
                 url: "http://" + IP + "/GetQuestionsForTagAndUser/" + tagName + "/" + userId,
+                method: "GET",
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .success(function (data, status, headers, config) {
+                return angular.fromJson(data);
+            })
+            .error(function (data, status, headers, config) { // optional
+                // failed
+            })
+        },
+        getFavoriteQuestionsForUser: function (userId) {
+            return $http({
+                url: "http://" + IP + "/GetFavoriteQuestionsForUser/" + userId,
                 method: "GET",
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             })

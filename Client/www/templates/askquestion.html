@@ -1,7 +1,7 @@
 ﻿<ion-view>
-    <ion-header-bar align-title="left" class="bar-positive">
+    <ion-header-bar align-title="left" class="bar-dark bar">
         <div class="buttons">
-            <button class="button button-large" ng-click="submit()">שלח שאלה</button>
+            <button class="button button-large" ng-click="submit()"><b>שלח שאלה</b></button>
         </div>
     </ion-header-bar>
     <ion-content>
@@ -16,21 +16,20 @@
                 <span class="input-label"><b>הוסף הערה</b></span>
                 <textarea cols="40" rows="5" ng-model="details"></textarea>
             </label>
-            <label class="item item-stable" style="display:flex;">
+            <label class="item item-stable">
                 <span class="input-label"><b>הוסף תגיות</b></span>
                 <!--התגיות שלך:-->
                 <ul class="list">
 
-                    <li class="item item-checkbox-right item-balanced" style="float:right;" ng-repeat="mytag in mytags">
-                        <label class="checkbox">
-                            <input type="checkbox" />
-                            <label class="checkbox">
-                               {{mytag.name}} #
-                            </label>
+                    <li class="item item-checkbox-right item-light"  ng-repeat="mytag in mytags">
+                        <label class="checkbox" >
+                            <input type="checkbox" style="margin-left:10px;" />
+                            <b>{{mytag.name}}</b>
                         </label>
                     </li>
                 </ul>
 
+            </label>
                 <!--תגיות פופלריות:
         <span ng-repeat="poptag in populartags">{{poptag}}</span>
         תגיות:

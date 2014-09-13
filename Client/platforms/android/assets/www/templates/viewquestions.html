@@ -1,7 +1,7 @@
 ﻿<ion-side-menus>
 
     <ion-side-menu-content>
-        <ion-nav-bar class="bar-royal">
+        <ion-nav-bar class="bar-positive">
             <ion-nav-back-button class="button-icon ion-arrow-left-c">
             </ion-nav-back-button>
         </ion-nav-bar>
@@ -9,37 +9,46 @@
             <button class="button button-icon button-clear ion-navicon" ng-click="showMenu()"></button>
         </ion-nav-buttons>
         <ion-view>
+            <!-- load before hack-->
+            <img ng-repeat="question in questions" ng-src="{{question.imagePath}}" style="display: none">
 
-            <ion-content>
+            <!-- Main Content-->
+            <ion-content class="has-header" scroll="false">
                 <swipe-cards>
-                    <swipe-card ng-repeat="question in questions" style="direction:rtl">
-                        <!--on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)">-->
-                        <div class="list card">
-                            <div class="item">
-                                <h2>{{question.title}}</h2>
+                    <swipe-card ng-show="questionCards.length == 0" style="direction:rtl;">
+                        <div class="list card" style="margin:5px;">
+                            <div class="item item-text-wrap" style="text-align:center;">
+                                <h2>אין כרגע עוד שאלות</h2>
                             </div>
-                            <div class="item image" ng-click="showFullScreen(question.imagePath)" style="height:100%;width:100%;">
-                                <img ng-src="{{question.imagePath}}" style="height:50%;width:100%;" />
+                        </div>
+                    </swipe-card>
+                    <swipe-card ng-repeat="currentQuestion in questionCards" on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)" style="direction:rtl">
+                        <div class="list card" style="margin:5px;">
+                            <div class="item item-stable">
+                                <h2>{{currentQuestion.title}}</h2>
                             </div>
-                            <div class="item" style="margin-bottom:10px;">
+                            <div class="item image item-stable" ng-click="showFullScreen(currentQuestion.imagePath)" style="height:100%;width:100%;padding:3px;">
+                                <img ng-src="{{currentQuestion.imagePath}}" style="height:60%;width:100%;" />
+                            </div>
+                            <div class="item item-stable" style="margin-bottom:3px;">
                                 <p>
-                                    {{question.details}}
+                                    {{currentQuestion.details}}
                                 </p>
                                 <p>
                                     <a href="#" class="subdued">5 תשובות</a>
                                 </p>
                             </div>
 
-                            <div class="item tabs tabs-secondary tabs-icon-left">
-                                <a class="tab-item" href="#">
+                            <div class="item tabs tabs-secondary tabs-icon-left" style="background-color:#f8f8f8;">
+                                <a class="tab-item" href="#" style="color:black">
                                     <i class="icon ion-ios7-star-outline"></i>
                                     שמור
                                 </a>
-                                <a class="tab-item" href="#">
+                                <a class="tab-item tab-item-active" href="#" style="color:black">
                                     <i class="icon ion-camera"></i>
                                     ענה
                                 </a>
-                                <a class="tab-item" href="#">
+                                <a class="tab-item" href="#" style="color:black">
                                     <i class="icon ion-share"></i>
                                     שתף
                                 </a>
@@ -51,15 +60,23 @@
         </ion-view>
     </ion-side-menu-content>
 
-    <ion-side-menu side="right">
-        <ion-header-bar class="bar bar-header bar-balanced">
-            <h1 class="title">נושאים</h1>
-        </ion-header-bar>
+    <ion-side-menu side="right" >
         <ion-content>
+
             <ion-list ng-controller="TagsCtrl"
                       show-delete="shouldShowDelete"
                       show-reorder="shouldShowReorder"
                       can-swipe="listCanSwipe">
+                <div class="item item-divider" style="text-align:center">
+                    מועדפים
+                </div>
+                <ion-item class="item item-icon-right" style="text-align:center">
+                    <i class="icon ion-ios7-star-outline"></i>
+                    מועדפים
+                </ion-item>
+                <div class="item item-divider" style="text-align:center">
+                    הנושאים שלי
+                </div>
                 <ion-item class="item item-reorder" style="text-align:center" ng-repeat="tag in tags" ng-click="selectTag(tag)" ng-class="{'item-energized': tag==selectedTag,'item-avatar-right': tag.icon != undefined}">
                     <img ng-src="{{tag.icon}}" />
                     {{tag.name}}

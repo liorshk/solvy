@@ -352,6 +352,22 @@ describe('Routing', function () {
                 done();
 
             });
+
+            it('Get Favorite Questions for User', function (done) {
+                request(url)
+                       .get('/GetFavoriteQuestionsForUser/' + UserId)
+                       .expect(200)//Status code
+                       .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.Questions.should.be.instanceof(Array);
+                });
+                
+                done();
+
+            });
         });
     });
 });
