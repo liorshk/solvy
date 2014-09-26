@@ -31,7 +31,7 @@ describe('Routing', function () {
         done();
     });
     
-    describe('InitLoad', function () {
+    describe.skip('InitLoad', function () {
         describe('Adding Universities', function () {
             it('Adding Jerusalem University', function (done) {
                 request(url)
@@ -190,7 +190,7 @@ describe('Routing', function () {
     });
 
     describe('User', function () {
-        it('Adding User', function (done) {
+        it.skip('Adding User', function (done) {
 
             var profile = { data: '{ "username": "user", "email": "email", "password": "pass" }' };
 
@@ -257,7 +257,7 @@ describe('Routing', function () {
                     });
             });
 
-            it('Set Tags To User', function (done) {
+            it.skip('Set Tags To User', function (done) {
                 request(url)
                        .post('/SetTagsToUser')
                        .send({ data: JSON.stringify({ userId: UserId, tags: ["אוניברסיטת תל אביב","חדוא"] }) })
@@ -291,7 +291,7 @@ describe('Routing', function () {
 
             });
             
-            it('Asks Question', function (done) {
+            it.skip('Asks Question', function (done) {
                 request(url)
                        .post('/AskQuestion')
                        .field('data', JSON.stringify({ userId: UserId, title: "נושא השאלה", details: "תיאור השאלה" }))
@@ -356,6 +356,22 @@ describe('Routing', function () {
             it('Get Favorite Questions for User', function (done) {
                 request(url)
                        .get('/GetFavoriteQuestionsForUser/' + UserId)
+                       .expect(200)//Status code
+                       .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.Questions.should.be.instanceof(Array);
+                });
+                
+                done();
+
+            });
+
+            it('Get Questions for tag and is favorite for user', function (done) {
+                request(url)
+                       .get('/GetQuestionsForTagAndFavoriteForUser/' + "חדוא" + "/" + UserId)
                        .expect(200)//Status code
                        .end(function (err, res) {
                     if (err) {

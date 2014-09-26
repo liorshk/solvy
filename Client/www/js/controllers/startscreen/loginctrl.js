@@ -3,12 +3,14 @@
     // TODO - remove and secure this
     if (UserService.getCurrentUser() != undefined) {
 
-        for (var user in UserService.getAllUsers()) {
-            if (user.user_id == UserService.getCurrentUser().UserID)
-            {
-                $state.go('app.home');
+        UserService.getAllUsers().then(function (users) {
+            for (var i in users) {
+                if (users[i].user_id == UserService.getCurrentUser().UserID) {
+                    $state.go('app.home');
+                }
             }
-        }
+        });
+        
     }
 
     $scope.login = function (user) {

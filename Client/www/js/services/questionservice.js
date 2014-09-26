@@ -106,6 +106,19 @@
                 // failed
             })
         },
+        GetQuestionsForTagAndFavoriteForUser: function (tagName, userId) {
+            return $http({
+                url: "http://" + IP + "/GetQuestionsForTagAndFavoriteForUser/" + tagName + "/" + userId,
+                method: "GET",
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            })
+            .success(function (data, status, headers, config) {
+                return angular.fromJson(data);
+            })
+            .error(function (data, status, headers, config) { // optional
+                // failed
+            })
+        },
         getFavoriteQuestionsForUser: function (userId) {
             return $http({
                 url: "http://" + IP + "/GetFavoriteQuestionsForUser/" + userId,

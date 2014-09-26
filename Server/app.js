@@ -80,6 +80,7 @@ app.post('/SetQuestionFavorite', question.SetQuestionFavorite);   // return {IsS
 app.get('/GetFavoriteQuestionsForUser/:userId', question.GetFavoriteQuestionsForUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid}
 app.get('/GetQuestionsForTagAndUser/:tagName/:userId', question.GetQuestionsForTagAndUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid,"tag":string}
 app.get('/GetQuestionsForTag/:tagName', question.GetQuestionsForTag); //  return {IsSuccess: bool, Questions: Array }    | {"tag":string}
+app.get('/GetQuestionsForTagAndFavoriteForUser/:tagName/:userId', question.GetQuestionsForTagAndFavoriteForUser); //  return {IsSuccess: bool, Questions: Array (isFavorite) }    | {"userId":guid,"tag":string}
 app.get('/GetAllSolutionForQuestion/:questionId', solution.GetAllSolutionForQuestion); // 
 app.get('/GetQuestions', question.GetQuestions);           //              |
 

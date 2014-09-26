@@ -7,7 +7,7 @@ controllers.controller('ViewQuestionsCtrl', function ($scope, $rootScope, $ionic
 
     function loadQuestionsForTag(tag) {
         console.log("Getting Questions for " + tag.name);
-        QuestionService.getQuestionsForTag(tag.name).
+        QuestionService.GetQuestionsForTagAndFavoriteForUser(tag.name, UserService.getCurrentUser().UserID).
                                    success(function (data) {
                                        if (data.IsSuccess) {
 
@@ -105,7 +105,7 @@ controllers.controller('ViewQuestionsCtrl', function ($scope, $rootScope, $ionic
 
     $scope.favorite = function (question) {
         QuestionService.setFavorite(question.question_id);
-        question.favorite = true;
+        question.isFavorite = true;
     }
     
 })

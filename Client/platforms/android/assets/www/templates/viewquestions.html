@@ -15,13 +15,13 @@
             <!-- Main Content-->
             <ion-content class="has-header" scroll="false">
                 <swipe-cards>
-                    <swipe-card ng-show="questionCards.length == 0" style="direction:rtl;">
+                    <div ng-show="questionCards.length == 0" style="direction:rtl;">
                         <div class="list card" style="margin:5px;">
                             <div class="item item-text-wrap" style="text-align:center;">
                                 <h2>אין כרגע עוד שאלות</h2>
                             </div>
                         </div>
-                    </swipe-card>
+                    </div>
                     <swipe-card ng-repeat="currentQuestion in questionCards" on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)" style="direction:rtl">
                         <div class="list card" style="margin:5px;">
                             <div class="item item-stable">

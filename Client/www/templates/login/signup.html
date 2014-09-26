@@ -1,17 +1,22 @@
 <ion-view>
-    <ion-content>
+    <ion-header-bar align-title="right" class="bar-positive">
+        <h1 class="title">הרשמה</h1>
+    </ion-header-bar>
+    <ion-content style="direction:rtl;margin-top:30px;"> 
         <div class="list">
-            <label class="item item-input">
-                <span class="input-label">שם משתמש</span>
-                <input type="text" ng-model="user.username">
+            <label class="item item-input lbl">
+                <i class="ion-person"></i>
+                <input type="text" placeholder="שם משתמש" ng-model="user.username">
             </label>
-            <label class="item item-input">
-                <span class="input-label">אימייל</span>
-                <input type="text" ng-model="user.email">
+            <br />
+            <label class="item item-input lbl">
+                <i class="ion-email"></i>
+                <input type="text" placeholder="אימייל" ng-model="user.email">
             </label>
-            <label class="item item-input">
-                <span class="input-label">סיסמה</span>
-                <input type="password" ng-model="user.password">
+            <br />
+            <label class="item item-input lbl">
+                <i class="ion-locked"></i>
+                <input type="password" placeholder="סיסמה" ng-model="user.password">
             </label>
         </div>
         <div class="padding">

@@ -203,6 +203,61 @@
 
 	
     };
+
+    /*
+     * GET questions for a tag and adds isFavorite for the user
+     */		  
+    this.GetQuestionsForTagAndFavoriteForUser = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        var data = req.params;
+        if (req.method == "POST") {
+            data = req.body;
+        }
+        
+        db.Graph
+        .query(
+        "match (q:Question)-[b:" + Relationship_Tag_Question + "]->(tag:Tag)" +
+        "optional match (user:User)-[f:"+ Relationship_Favorite_Question_User+"]->(q)" +
+        " where tag.name = '" + data.tagName + "' and user.user_id = '"+data.userId + "' return q,f ", 
+            function (err, result) {
+            
+            if (err != null) {
+                res.json({ IsSuccess: false });
+                return;
+            }
+            var questions = [];
+            var favoriteQids = [];
+            if (result != null) {
+                result.data.forEach(function (entry) {
+                    // TODO - Make it more efficient
+                    entry.forEach(function (ent) {
+                        if (ent.type == Relationship_Favorite_Question_User) {
+                            favoriteQids[ent.to.id]=true;
+                        }
+                        else {
+                            ent.data.id = ent.id;
+                            questions.push(ent.data);
+                        }
+                    });
+                });
+                
+                for(var i in questions){                    
+                    if (favoriteQids[questions[i].id]) {
+                        questions[i].isFavorite = true;
+                    }
+                };
+                
+                console.log('Returning ' + questions.length + ' Questions for tag: ' + data.tagName);
+            }
+            else {
+                console.log("No questions found");
+            }
+
+            res.json({ IsSuccess: true, Questions: questions });
+        });
+
+	
+    };
     
     /*
      * GET favorite questions for a user

@@ -49,3 +49,13 @@ animation-duration: 2s;
 .swipe-card .button {
   border: none;
 }
+
+.lbl
+{
+    font-size:x-large;
+    padding-right:15px;
+}
+.lbl:hover{
+    background: rgba(198, 200, 200,0.2);
+
+}
