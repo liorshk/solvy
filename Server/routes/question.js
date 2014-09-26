@@ -231,12 +231,14 @@
                 result.data.forEach(function (entry) {
                     // TODO - Make it more efficient
                     entry.forEach(function (ent) {
-                        if (ent.type == Relationship_Favorite_Question_User) {
-                            favoriteQids[ent.to.id]=true;
-                        }
-                        else {
-                            ent.data.id = ent.id;
-                            questions.push(ent.data);
+                        if (ent != null) {
+                            if (ent.type == Relationship_Favorite_Question_User) {
+                                favoriteQids[ent.to.id] = true;
+                            }
+                            else {
+                                ent.data.id = ent.id;
+                                questions.push(ent.data);
+                            }
                         }
                     });
                 });
