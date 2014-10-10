@@ -6,7 +6,7 @@
     var Relationship_Favorite_Question_User = "Favorite";    
     var Relationship_Solution_Question = "Belongs";
     var Relationship_Solution_User = "Answer";
-    console.log(utils);
+
     var fileUploader = new utils.fileUploader();
 
     var Question = db.Node.registerModel('Question', { 
