@@ -1,9 +1,13 @@
-﻿exports.QuestionModule = function(db, fs, utils)
+﻿exports.QuestionModule = function(db, fs, utils, underscore)
 {
     var Relationship_Question_User = "Ask";    
     var Relationship_Tag_User = "Subscribe";
     var Relationship_Tag_Question = "Belongs";    
-    var Relationship_Favorite_Question_User = "Favorite";
+    var Relationship_Favorite_Question_User = "Favorite";    
+    var Relationship_Solution_Question = "Belongs";
+    var Relationship_Solution_User = "Answer";
+
+    var fileUploader = new utils.fileUploader();
 
     var Question = db.Node.registerModel('Question', { 
 		fields: {
@@ -35,40 +39,45 @@
         if (data.data != undefined) {
             data = JSON.parse(data.data);
         }
-    
-		var imagePath = SaveImageInStorage(req);
-		if (imagePath != null)
-        {                        
-            var userId = data.UserId;
-            var qData = { imagePath: imagePath, title: data.title, details: data.details };  
-            
-            try {
-                var question = new Question(qData);
-                
-                question.save(function (err, resultAdd) {
-                    db.Graph.query(utils.getMergeAndRelationshipQuery("User", { user_id: userId }, Relationship_Question_User, "Question", { question_id: resultAdd.data.question_id })
-                        , function (err, result) {
-                                    res.send({ IsSuccess: true, QuestionID: resultAdd.data.question_id });
-                                    console.log('Success to add question');
-                                });
-                });                
-
-            } catch (err) 
-            {
-                console.log('Failed to add question: ' + err);
-                res.json({IsSuccess:false, Error:'Failed to add question'});
-            }
-        }
-        else
-        {
-            console.log('Failed to add image question');
-            res.json({IsSuccess:false, Error:'Failed to add image question'});
-        }
-    }
-
-    function SaveImageInStorage(req) {
+        
         var file = req.files.file,
             filePath = file.path;
+        
+        var fileName = utils.guid();
+
+        fileUploader.upload(filePath, fileName, function (result) {
+            if (result != null) {
+                var imagePath = result.url;
+                var userId = data.userId;
+                var qData = { imagePath: imagePath, title: data.title, details: data.details };
+                
+                try {
+                    var question = new Question(qData);
+                    
+                    question.save(function (err, resultAdd) {
+                        db.Graph.query(utils.getMergeAndRelationshipQuery("User", { user_id: userId }, Relationship_Question_User, "Question", { question_id: resultAdd.data.question_id })
+                        , function (err, result) {
+                            res.send({ IsSuccess: true, QuestionID: resultAdd.data.question_id });
+                            console.log('Success to add question');
+                        });
+                    });
+
+                } catch (err) {
+                    console.log('Failed to add question: ' + err);
+                    res.json({ IsSuccess: false, Error: 'Failed to add question' });
+                }
+            }
+            else {
+                console.log('Failed to add image question');
+                res.json({ IsSuccess: false, Error: 'Failed to add image question' });
+            }
+        });
+		
+    }
+    
+
+    function SaveImageInStorage(req) {
+        
         // TODO - change the ip
         //var os = require('os');
         //var ifaces = os.networkInterfaces();
@@ -81,16 +90,16 @@
         //        }
         //    });
         //}
-        var address = "54.72.160.154";
+        //var address = "54.72.160.154";
 
-        var address = "http://" + address + "/";
-        var imageName = utils.guid() + ".jpg";
-        var newPath = 'uploads/' + imageName;
-        fs.rename(filePath, newPath, function (err) {
-            if (err) throw err;
-            console.log(newPath);
-        });
-        return address + imageName;
+        //var address = "http://" + address + "/";
+        //var imageName = utils.guid() + ".jpg";
+        //var newPath = 'uploads/' + imageName;
+        //fs.rename(filePath, newPath, function (err) {
+        //    if (err) throw err;
+        //    console.log(newPath);
+        //});
+        //return address + imageName;
     }
 
     /*
@@ -126,7 +135,40 @@
                     }
             });
     }
-    
+
+    /*
+     * POST unfavorites question
+     * Input: {questionId:guid, userId:guid}
+     * Return:  {IsSuccess: bool}    
+     */	
+    this.UnfavoriteQuestion = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        var data = req.params;
+        if (req.method == "POST") {
+            data = req.body;
+        }
+        if (data.data != undefined) {
+            data = JSON.parse(data.data);
+        }
+        db.Graph
+            .query(
+                "match (u:User)-[f:" + Relationship_Favorite_Question_User + "]->(q:Question) where q.question_id = '" + data.questionId + "'" +
+                                                        "AND u.user_id='" + data.userId + "' delete f", 
+                function (err, result) {
+            
+            var questions = [];
+            
+            if (err == null) {
+                
+                res.json({ IsSuccess: true });
+                
+                console.log('Success to unfavorite question "' + data.questionId + ' unfavorited by user ' + data.userId);
+            }
+            else {
+                res.json({ IsSuccess: false });
+            }
+        });
+    }
 
     /*
      * GET questions for a user and a tag
@@ -216,9 +258,10 @@
         
         db.Graph
         .query(
-        "match (q:Question)-[b:" + Relationship_Tag_Question + "]->(tag:Tag)" +
-        "optional match (user:User)-[f:"+ Relationship_Favorite_Question_User+"]->(q)" +
-        " where tag.name = '" + data.tagName + "' and user.user_id = '"+data.userId + "' return q,f ", 
+        "match (q:Question)-[tq:" + Relationship_Tag_Question + "]->(tag:Tag) " +
+        "optional match (user:User{user_id:'" + data.userId + "'})-[fqu:" + Relationship_Favorite_Question_User + "]->(q) " +
+        "optional match (solution:Solution)-[sq:" + Relationship_Solution_Question + "]->(q) " +
+        "where tag.name = '" + data.tagName + "' return q,fqu,solution ", 
             function (err, result) {
             
             if (err != null) {
@@ -226,28 +269,28 @@
                 return;
             }
             var questions = [];
-            var favoriteQids = [];
             if (result != null) {
                 result.data.forEach(function (entry) {
-                    // TODO - Make it more efficient
-                    entry.forEach(function (ent) {
-                        if (ent != null) {
-                            if (ent.type == Relationship_Favorite_Question_User) {
-                                favoriteQids[ent.to.id] = true;
-                            }
-                            else {
-                                ent.data.id = ent.id;
-                                questions.push(ent.data);
-                            }
-                        }
-                    });
-                });
-                
-                for(var i in questions){                    
-                    if (favoriteQids[questions[i].id]) {
-                        questions[i].isFavorite = true;
+                    // [0] = question [1]= isFavorite [2]= solution
+                    var question = entry[0].data;
+                    question.solutions = [];
+                    if (entry[1] != null) {
+                        question.isFavorite = true;
                     }
-                };
+
+                    if (questions[question.question_id] == null) {                        
+                        
+                        if (entry[2] != null) {
+                            question.solutions = [entry[2].data];
+                        }
+                        questions[question.question_id] = question;
+                    }
+                    else {
+                        if (entry[2] != null) {
+                            questions[question.question_id].solutions.push(entry[2].data);
+                        }
+                    }   
+                });
                 
                 console.log('Returning ' + questions.length + ' Questions for tag: ' + data.tagName);
             }
@@ -255,7 +298,7 @@
                 console.log("No questions found");
             }
 
-            res.json({ IsSuccess: true, Questions: questions });
+            res.json({ IsSuccess: true, Questions: underscore.values(questions) });
         });
 
 	

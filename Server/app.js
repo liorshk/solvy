@@ -6,6 +6,7 @@ var express        = require('express');
 var morgan         = require('morgan');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
+var underscore = require('underscore');
 var multipart = require('connect-multiparty');
 var routes = require('./routes');
 var user = require('./routes/user');
@@ -25,9 +26,9 @@ var Neo4jMapper = require('neo4jmapper');
 var neo4j = new Neo4jMapper('http://localhost:7474/');
 
 user = new user.UserModule(neo4j, utils);
-question = new question.QuestionModule(neo4j, fs, utils);
+question = new question.QuestionModule(neo4j, fs, utils, underscore);
 tag = new tag.TagModule(neo4j, utils);
-solution = new solution.SolutionModule(neo4j,fs);
+solution = new solution.SolutionModule(neo4j,fs, utils);
 
 var app = express();
 
@@ -43,6 +44,7 @@ if (!exists) {
     })
 }
 });
+
 
 // all environments
 app.set('port', 80);
@@ -65,18 +67,24 @@ app.get('/', routes.index);
 app.use(express.static(path.join(__dirname, './uploads')));
 
 // ----------------------------------------Methods To implements.--------------------------------------------
+// Users
 app.post('/AddUser', user.AddUser); // return {IsSuccess: bool, UserID: Guid }   | {"username":"Check Maor","email":"asdasdasdasd","password":"123123","university":string,"courses":array[string]}
 app.post('/LogIn', user.LogIn); // return {IsSuccess: bool, UserID: Guid }       | {"email":"asdasdasdasd","password":"123123"}
 app.post('/DeleteUser', user.DeleteUser); // return {IsSuccess: bool }           | {"userId": guid} // TODO -SECURE
 
+// Tags
 app.post('/UpsertTag', tag.UpsertTag); //    return {IsSuccess: bool, TagID: guid}      | {"name":string,"icon":string,"type": "university/course/topic"}
 app.post('/SetTagsToUser', tag.SetTagsToUser); //    return {IsSuccess: bool}      | {"userId":guid,"tags":array of string}
 app.post('/SetTagsToQuestion', tag.SetTagsToQuestion); //                          | {"questionId":guid,"tags":array of string}
 app.get('/GetTagsStartWith/:tagName', tag.GetTagsStartWith);
 app.get('/GetTagsForUser/:userId', tag.GetTagsForUser);
+app.get('/GetTagsByType/:type', tag.GetTagsByType); // return {IsSuccess: bool, array of tags}} | type: "university/course/topic" 
+
+// Questions
 app.post('/AskQuestion', question.AskQuestion);     // return {IsSuccess: bool, QuestionID: Guid }    | {"file":"c:/asd/asd.image","title": "Title", "details":"bla bla image"}
-app.post('/AddAnswerToQuestion', solution.AddAnswerToQuestion);   //  
+app.post('/AnswerQuestion', solution.AnswerQuestion);   //  
 app.post('/SetQuestionFavorite', question.SetQuestionFavorite);   // return {IsSuccess: bool}    | Input: {questionId: guid, userId:guid}
+app.post('/UnfavoriteQuestion', question.UnfavoriteQuestion);   // return {IsSuccess: bool}    | Input: {questionId: guid, userId:guid}
 app.get('/GetFavoriteQuestionsForUser/:userId', question.GetFavoriteQuestionsForUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid}
 app.get('/GetQuestionsForTagAndUser/:tagName/:userId', question.GetQuestionsForTagAndUser); //  return {IsSuccess: bool, Questions: Array }    | {"userId":guid,"tag":string}
 app.get('/GetQuestionsForTag/:tagName', question.GetQuestionsForTag); //  return {IsSuccess: bool, Questions: Array }    | {"tag":string}

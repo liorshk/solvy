@@ -13,7 +13,9 @@
     "body-parser": "~1.0.0",
     "method-override": "~1.0.0",
     "connect-multiparty": "*",
-    "neo4jmapper": "*"
+    "neo4jmapper": "*",
+    "underscore": "*",
+    "cloudinary": "*"
   },
   "devDependencies": {
    "supertest": "*",

@@ -159,5 +159,40 @@
         }
 
     };
+    
+    /*
+    * GET GetTagsByType
+     * Input: {"type":string}
+     * Return:  array of tags
+    */
+    this.GetTagsByType = function (req, res) {
+        res.header('Access-Control-Allow-Origin', "*");
+        var tags = [];
+        
+        try {
+            db.Graph
+           .request()
+            .query("MATCH (tag:Tag) where tag.type ='" + req.params.type + "' RETURN tag;", function (err, found) {
+                if (found != null) {
+                    found.data.forEach(function (entry) {
+                        entry.forEach(function (ent) {
+                            tags.push(ent.data);
+                        });
+                    });
+                }
+                
+                if (err == null) {
+                    res.json({ IsSuccess: true, tags: tags });
+                }
+                else {
+                    res.json({ IsSuccess: false });
+                }
+            });
+        }
+        catch (err) {
+            if (utils.isError(err, res, 'Failed to get tags by type')) return;
+        }
 
+    };
+    
 }

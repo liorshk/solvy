@@ -231,158 +231,257 @@ describe('Routing', function () {
         });
 
         describe('User - After Login', function () {
-
+            
             var profile = { data: '{"username":"user","password":"pass"}' };
             var UserId;
-
+            
             it('Login', function (done) {
-
+                
                 var profile = { data: '{"username":"user","password":"pass"}' };
-
+                
                 request(url)
                     .post('/Login')
                     .send(profile)
                     .expect('Content-Type', /json/)
-                    .expect(200) //Status code
+                    .expect(200)//Status code
                     .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.IsSuccess.should.equal(true);
+                    res.body.UserID.should.have.length(36);
+                    
+                    UserId = res.body.UserID;
+                    done();
+                });
+            });
+            
+            it('Set Tags To User', function (done) {
+                request(url)
+                       .post('/SetTagsToUser')
+                       .send({ data: JSON.stringify({ userId: UserId, tags: ["אוניברסיטת תל אביב","חדוא"] }) })
+                       .expect('Content-Type', /json/)
+                       .expect(200)//Status code
+                       .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.IsSuccess.should.equal(true);
+                });
+                
+                done();
+
+            });
+            
+            it('Get Tags For User', function (done) {
+                request(url)
+                       .get('/GetTagsForUser/' + UserId)
+                       .expect(200)//Status code
+                       .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.should.be.instanceof(Array);
+                });
+                
+                done();
+
+            });
+            
+            it('Get Universities', function (done) {
+                request(url)
+                       .get('/GetTagsByType/' + 'university')
+                       .expect(200)//Status code
+                       .end(function (err, res) {
+                    if (err) {
+                        throw err;
+                    }
+                    // Should.js fluent syntax applied
+                    res.body.tags.should.be.instanceof(Array);
+                });
+                
+                done();
+
+            });
+            
+            describe('Question', function () {
+                                
+                var QuestionId;
+
+                //before(function (done) {
+                    
+                //    // Init QuestionId
+                //    request(url)
+                //           .get('/GetQuestionsForTag/' + "חדוא")
+                //           .expect(200)//Status code
+                //           .end(function (err, res) {
+                //        if (err) {
+                //            throw err;
+                //        }
+                //        // Should.js fluent syntax applied
+                //        res.body.Questions.should.be.instanceof(Array);
+                //        if (res.body.Questions != undefined && res.body.Questions[0] != undefined) {
+                //            QuestionId = res.body.Questions[0].question_id;
+                //            done();
+                //        }
+                //    });
+                    
+                //});
+                
+                it.skip('Asks Question', function (done) {
+                    this.timeout(100000);
+                    request(url)
+                       .post('/AskQuestion')
+                       .field('data', JSON.stringify({ userId: UserId, title: "נושא השאלה", details: "תיאור השאלה" }))
+                       .attach('file', 'test/sampleImg.jpg')
+                       .expect(200)//Status code
+                       .end(function (err, res) {
                         if (err) {
                             throw err;
                         }
                         // Should.js fluent syntax applied
                         res.body.IsSuccess.should.equal(true);
-                        res.body.UserID.should.have.length(36);
 
-                        UserId = res.body.UserID;
-                        done();
-                    });
-            });
+                        QuestionId = res.body.QuestionID;
 
-            it.skip('Set Tags To User', function (done) {
-                request(url)
-                       .post('/SetTagsToUser')
-                       .send({ data: JSON.stringify({ userId: UserId, tags: ["אוניברסיטת תל אביב","חדוא"] }) })
-                       .expect('Content-Type', /json/)
-                       .expect(200) //Status code
-                       .end(function (err, res) {
-                           if (err) {
-                               throw err;
-                           }
-                           // Should.js fluent syntax applied
-                           res.body.IsSuccess.should.equal(true);
-                       });
-
-                done();
-
-            });
-
-            it('Get Tags For User', function (done) {
-                request(url)
-                       .get('/GetTagsForUser/' + UserId)
-                       .expect(200) //Status code
-                       .end(function (err, res) {
-                           if (err) {
-                               throw err;
-                           }
-                           // Should.js fluent syntax applied
-                           res.body.should.be.instanceof(Array);
-                       });
-
-                done();
-
-            });
-            
-            it.skip('Asks Question', function (done) {
-                request(url)
-                       .post('/AskQuestion')
-                       .field('data', JSON.stringify({ userId: UserId, title: "נושא השאלה", details: "תיאור השאלה" }))
-                       .attach('file', 'test/sampleImg.jpg')
-                       .expect(200) //Status code
-                       .end(function (err, res) {
-                           if (err) {
-                               throw err;
-                           }
-                            // Should.js fluent syntax applied
-                            res.body.IsSuccess.should.equal(true);
-
-                            request(url)
+                        request(url)
                                     .post('/SetTagsToQuestion')
                                     .send({ data: JSON.stringify({ questionId: res.body.QuestionID, tags: ["חדוא"] }) })
                                     .expect(200)//Status code
                                     .end(function (err, res) {
-                                if (err) {
-                                    throw err;
-                                }
-                                // Should.js fluent syntax applied
-                                res.body.IsSuccess.should.equal(true);
-                            });
-                    
-                            done();
+                            if (err) {
+                                throw err;
+                            }
+                            // Should.js fluent syntax applied
+                            res.body.IsSuccess.should.equal(true);
                         });
+                        
+                        done();
+                    });
 
-            });
+                });
 
-            it('Get Questions for Tag', function (done) {
-                request(url)
-                       .get('/GetQuestionsForTag/' + "חדוא")
-                       .expect(200)//Status code
-                       .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    // Should.js fluent syntax applied
-                    res.body.Questions.should.be.instanceof(Array);
+                it.skip('Get Questions for Tag', function (done) {
+                    request(url)
+                           .get('/GetQuestionsForTag/' + "חדוא")
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.Questions.should.be.instanceof(Array);
+                        if (res.body.Questions != undefined && res.body.Questions[0] != undefined) {
+                            QuestionId = res.body.Questions[0].question_id;
+
+                            done();
+                        }
+                    });
+
+                });
+
+                it('Answer Question', function (done) {                    
+                    this.timeout(100000);
+                    request(url)
+                           .post('/AnswerQuestion')
+                           .field('data', JSON.stringify({ userId: "f588bfb8-e26c-db2a-2462-5e1a9627f6cb", title: "נושא השאלה", details: "תיאור השאלה", questionId: "c9d5f122-eaf0-65b9-a612-3fd147d37be5" }))
+                           .attach('file', 'test/sampleImg.jpg')
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.IsSuccess.should.equal(true);
+                        
+                        done();
+                    });
                 });
                 
-                done();
+                it.skip('Get Questions for Tag and user', function (done) {
+                    request(url)
+                           .get('/GetQuestionsForTagAndUser/' + "חדוא" + "/" + UserId)
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.Questions.should.be.instanceof(Array);
+                    });
+                    
+                    done();
 
-            });
-
-            it('Get Questions for Tag and user', function (done) {
-                request(url)
-                       .get('/GetQuestionsForTagAndUser/' + "חדוא"+"/"+ UserId)
-                       .expect(200)//Status code
-                       .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    // Should.js fluent syntax applied
-                    res.body.Questions.should.be.instanceof(Array);
                 });
                 
-                done();
+                it.skip('Favorite Question', function (done) {
+                    request(url)
+                           .post('/SetQuestionFavorite')
+                            .send("data=" + JSON.stringify({ questionId: QuestionId, userId: UserId }))
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.IsSuccess.should.equal(true);
+                    });
+                    
+                    done();
 
-            });
-
-            it('Get Favorite Questions for User', function (done) {
-                request(url)
-                       .get('/GetFavoriteQuestionsForUser/' + UserId)
-                       .expect(200)//Status code
-                       .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    // Should.js fluent syntax applied
-                    res.body.Questions.should.be.instanceof(Array);
                 });
                 
-                done();
+                it.skip('Unfavorite Question', function (done) {
+                    request(url)
+                           .post('/UnfavoriteQuestion')
+                            .send("data=" + JSON.stringify({ questionId: QuestionId, userId: UserId }))
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.IsSuccess.should.equal(true);
+                    });
+                    
+                    done();
 
-            });
-
-            it('Get Questions for tag and is favorite for user', function (done) {
-                request(url)
-                       .get('/GetQuestionsForTagAndFavoriteForUser/' + "חדוא" + "/" + UserId)
-                       .expect(200)//Status code
-                       .end(function (err, res) {
-                    if (err) {
-                        throw err;
-                    }
-                    // Should.js fluent syntax applied
-                    res.body.Questions.should.be.instanceof(Array);
                 });
                 
-                done();
+                it.skip('Get Favorite Questions for User', function (done) {
+                    request(url)
+                           .get('/GetFavoriteQuestionsForUser/' + UserId)
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.Questions.should.be.instanceof(Array);
+                    });
+                    
+                    done();
 
+                });
+                
+                it('Get Questions for tag and is favorite for user', function (done) {
+                    request(url)
+                           .get('/GetQuestionsForTagAndFavoriteForUser/' + "חדוא" + "/" + UserId)
+                           .expect(200)//Status code
+                           .end(function (err, res) {
+                        if (err) {
+                            throw err;
+                        }
+                        // Should.js fluent syntax applied
+                        res.body.Questions.should.be.instanceof(Array);
+                    });
+                    
+                    done();
+
+                });
             });
         });
     });
