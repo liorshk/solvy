@@ -317,20 +317,34 @@
         
         db.Graph
         .query(
-        "match (user:User)-[a:" + Relationship_Favorite_Question_User + "]->(q:Question)" +
-        "where user.user_id = '" + data.userId + "' return q ", 
+        "match (user:User)-[a:" + Relationship_Favorite_Question_User + "]->(q:Question) " +
+        "optional match (solution:Solution)-[sq:" + Relationship_Solution_Question + "]->(q) " +
+        "where user.user_id = '" + data.userId + "' return q,solution ", 
             function (err, result) {
             
             var questions = [];
             
             if (result != null) {
                 result.data.forEach(function (entry) {
-                    entry.forEach(function (ent) {
-                        questions.push(ent.data);
-                    });
+                    // [0] = question [1]= solution
+                    var question = entry[0].data;
+                    question.solutions = [];
+                    question.isFavorite = true;
+                    if (questions[question.question_id] == null) {
+                        
+                        if (entry[1] != null) {
+                            question.solutions = [entry[1].data];
+                        }
+                        questions[question.question_id] = question;
+                    }
+                    else {
+                        if (entry[1] != null) {
+                            questions[question.question_id].solutions.push(entry[1].data);
+                        }
+                    }  
                 });
                 
-                res.json({ IsSuccess: true, Questions: questions });
+                res.json({ IsSuccess: true, Questions: underscore.values(questions)  });
                 
                 console.log('Success to retrieve questions for user and tag');
             }

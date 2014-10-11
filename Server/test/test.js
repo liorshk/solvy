@@ -11,7 +11,7 @@ var fs = require('fs');
 
 
 describe('Routing', function () {
-    var url = 'localhost';
+    var url = '54.72.160.154';
     
     var userModule;
     var questionModule;
@@ -31,7 +31,7 @@ describe('Routing', function () {
         done();
     });
     
-    describe.skip('InitLoad', function () {
+    describe('InitLoad', function () {
         describe('Adding Universities', function () {
             it('Adding Jerusalem University', function (done) {
                 request(url)
@@ -190,7 +190,7 @@ describe('Routing', function () {
     });
 
     describe('User', function () {
-        it.skip('Adding User', function (done) {
+        it('Adding User', function (done) {
 
             var profile = { data: '{ "username": "user", "email": "email", "password": "pass" }' };
 
@@ -331,7 +331,7 @@ describe('Routing', function () {
                     
                 //});
                 
-                it.skip('Asks Question', function (done) {
+                it('Asks Question', function (done) {
                     this.timeout(100000);
                     request(url)
                        .post('/AskQuestion')
@@ -364,7 +364,7 @@ describe('Routing', function () {
 
                 });
 
-                it.skip('Get Questions for Tag', function (done) {
+                it('Get Questions for Tag', function (done) {
                     request(url)
                            .get('/GetQuestionsForTag/' + "חדוא")
                            .expect(200)//Status code
@@ -401,7 +401,7 @@ describe('Routing', function () {
                     });
                 });
                 
-                it.skip('Get Questions for Tag and user', function (done) {
+                it('Get Questions for Tag and user', function (done) {
                     request(url)
                            .get('/GetQuestionsForTagAndUser/' + "חדוא" + "/" + UserId)
                            .expect(200)//Status code
@@ -417,7 +417,7 @@ describe('Routing', function () {
 
                 });
                 
-                it.skip('Favorite Question', function (done) {
+                it('Favorite Question', function (done) {
                     request(url)
                            .post('/SetQuestionFavorite')
                             .send("data=" + JSON.stringify({ questionId: QuestionId, userId: UserId }))
@@ -434,7 +434,7 @@ describe('Routing', function () {
 
                 });
                 
-                it.skip('Unfavorite Question', function (done) {
+                it('Unfavorite Question', function (done) {
                     request(url)
                            .post('/UnfavoriteQuestion')
                             .send("data=" + JSON.stringify({ questionId: QuestionId, userId: UserId }))
@@ -451,7 +451,7 @@ describe('Routing', function () {
 
                 });
                 
-                it.skip('Get Favorite Questions for User', function (done) {
+                it('Get Favorite Questions for User', function (done) {
                     request(url)
                            .get('/GetFavoriteQuestionsForUser/' + UserId)
                            .expect(200)//Status code
